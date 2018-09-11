@@ -10,9 +10,6 @@ public class DeckTest extends TestCase{
 		
 		//test that deck is correct length
 		assertTrue(deck.getCards().length == 52);
-		
-		//test that deck contains all correct suits/ranks
-		//- just look at output for now
 	}
 	
 	public void testShuffle() {
