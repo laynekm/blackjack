@@ -7,8 +7,8 @@ public class DealerTest extends TestCase{
 		Dealer player = new Dealer();
 		Card card1 = new Card("D", "2");
 		Card card2 = new Card("S", "A");
-		player.getHand().addCard(card1);
-		player.getHand().addCard(card2);
+		player.addCard(card1);
+		player.addCard(card2);
 		
 		assertEquals("[D2] [SA]", player.getCardStringVisible());
 	}
@@ -17,8 +17,8 @@ public class DealerTest extends TestCase{
 		Dealer player = new Dealer();
 		Card card1 = new Card("D", "2");
 		Card card2 = new Card("S", "A");
-		player.getHand().addCard(card1);
-		player.getHand().addCard(card2);
+		player.addCard(card1);
+		player.addCard(card2);
 		
 		assertEquals("[D2] [||]", player.getCardStringVisible());
 	}
