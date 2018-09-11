@@ -25,7 +25,7 @@ public class DealerTest extends TestCase{
 		dealer.addCard(card1);
 		dealer.addCard(card2);
 		
-		assertEquals("[D2] [||]", dealer.getCardStringVisible());
+		assertEquals("[D2] [||]", dealer.getCardStringHidden());
 	}
 	
 	public void testGetCardStringHiddenNoCards() {
