@@ -1,7 +1,9 @@
 package blackjack;
 
-public class PlayerTest {
-	public void testDisplayCards() {
+import junit.framework.TestCase;
+
+public class PlayerTest extends TestCase{
+	public void testGetCardString() {
 		Player player = new Player();
 		Card card1 = new Card("D", "2");
 		Card card2 = new Card("S", "A");
