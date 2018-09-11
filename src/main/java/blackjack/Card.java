@@ -4,9 +4,9 @@ public class Card {
 	private String rank;
 	private String suit;
 	
-	public Card(String r, String s) {
-		rank = r;
+	public Card(String s, String r) {
 		suit = s;
+		rank = r;
 	}
 	
 	public String getRank() { return rank; }
