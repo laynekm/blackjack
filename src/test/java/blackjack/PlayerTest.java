@@ -14,4 +14,9 @@ public class PlayerTest extends TestCase{
 		
 		assertEquals("[D2] [SA] [HK]", player.getCardString());
 	}
+	
+	public void testGetCardStringNoCards() {
+		Player player = new Player();
+		assertEquals("", player.getCardString());
+	}
 }

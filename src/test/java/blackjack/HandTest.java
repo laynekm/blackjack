@@ -25,4 +25,9 @@ public class HandTest extends TestCase{
 		
 		assertEquals(13, testerHand.getTotal());
 	}
+	
+	public void testGetTotalNoCards() {
+		Hand testerHand = new Hand();
+		assertEquals(0, testerHand.getTotal());
+	}
 }
