@@ -46,6 +46,18 @@ public class Hand {
 		return total;
 	}
 	
+	public boolean hasSoft17() {
+		if(getTotal() == 17) {
+			for(int i = 0; i < cards.size(); i++) {
+				if(cards.get(i).getRank().equals("A")){
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+	
 	public List<Card> getCards(){
 		return cards;
 	}
