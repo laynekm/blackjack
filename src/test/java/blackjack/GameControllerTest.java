@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.Scanner;
 
 public class GameControllerTest extends TestCase{
 	public void testRunGame() {
@@ -12,11 +13,16 @@ public class GameControllerTest extends TestCase{
 		assertTrue(result == "dealer" || result == "player");
 	}
 	
-	//how can this be tested automatically as it's dependent on user input?
 	public void testPromptForInputType() {
 		GameController game = new GameController();
 		String inputType = game.promptForInputType();
 		assertTrue(inputType.equals("C") || inputType.equals("F"));
+	}
+	
+	public void testPromptForFileName() {
+		GameController game = new GameController();
+		String fileName = game.promptForFileName();
+		assertTrue(game.isValidFile(fileName));
 	}
 	
 	public void testIsValidFile() {
