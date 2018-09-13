@@ -13,6 +13,10 @@ public class Player {
 		playerHand.addCard(card);
 	}
 	
+	public int getTotal() {
+		return playerHand.getTotal();
+	}
+	
 	public String getCardString() {
 		String returnString = "";
 		List<Card> cards = playerHand.getCards();

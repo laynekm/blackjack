@@ -13,6 +13,10 @@ public class Dealer {
 		dealerHand.addCard(card);
 	}
 	
+	public int getTotal() {
+		return dealerHand.getTotal();
+	}
+	
 	public String getCardStringVisible() {
 		String returnString = "";
 		List<Card> cards = dealerHand.getCards();
