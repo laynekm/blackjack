@@ -97,37 +97,63 @@ public class GameController {
 		dealer.addCard(card2);
 		dealer.addCard(card3);
 		
-		System.out.println("Dealer: " + dealer.getCardStringHidden());
-		System.out.println("Dealer: " + dealer.getCardStringVisible());
-		System.out.println("Player: " + player.getCardString());
-		System.out.println("Player total: " + player.getTotal());
+		printGameDataDealerHidden();
 		
 		//game is over if dealer or player get a blackjack (ie. 21)
-		if(dealer.getTotal() == 21) {
-			return "dealer";
-		}
-		else if(player.getTotal() == 21) {
-			return "player";
-		}	
+		if(dealer.getTotal() == 21) { return "dealer"; }
+		if(player.getTotal() == 21) { return "player"; }	
 		
 		//if no blackjack, player prompted to hit or stand
 		int x = 4;
-		while(player.getTotal() < 21) {
+		while(player.getTotal() < 21 && x < moves.length) {
 			if(moves[x].equals("H")) {
 				Card newCard = new Card(moves[x+1]);
 				player.addCard(newCard);
-				System.out.println("Player: " + player.getCardString());
-				System.out.println("Player total: " + player.getTotal());
+				printGameDataDealerHidden();
+				x += 2;
 			}
-			
-			x += 2;
+			else {
+				x += 1;
+				break;
+			}
 		}
 		
-		if(player.getTotal() > 21) {
-			return "dealer";
+		if(player.getTotal() > 21) { 
+			System.out.println("Player went bust! Total: " + player.getTotal());
+			return "dealer"; 
 		}
-		else {
+		
+		printGameDataDealerVisible();
+		
+		//dealer hits if has 16 or soft 17 (ie. one of cards is ace)
+		while((dealer.getTotal() <= 16 || dealer.hasSoft17() == true) && x < moves.length){
+			Card newCard = new Card(moves[x]);
+			dealer.addCard(newCard);
+			printGameDataDealerVisible();
+			x += 1;
+		}
+		
+		if(player.getTotal() > dealer.getTotal()) {
 			return "player";
 		}
+		else {
+			return "dealer";
+		}
+	}
+	
+	public void printGameDataDealerHidden() {
+		System.out.println("Dealer: " + dealer.getCardStringHidden());
+		System.out.println("Player: " + player.getCardString());
+		System.out.println("Dealer total: ?");
+		System.out.println("Player total: " + player.getTotal());
+		System.out.println();
+	}
+	
+	public void printGameDataDealerVisible() {
+		System.out.println("Dealer: " + dealer.getCardStringVisible());
+		System.out.println("Player: " + player.getCardString());
+		System.out.println("Dealer total: " + dealer.getTotal());
+		System.out.println("Player total: " + player.getTotal());
+		System.out.println();
 	}
 }
