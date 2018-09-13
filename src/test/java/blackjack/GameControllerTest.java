@@ -6,62 +6,62 @@ import static org.junit.Assert.*;
 import java.io.File;
 
 public class GameControllerTest extends TestCase{
-	public void runGameTest() {
+	public void testRunGame() {
 		GameController game = new GameController();
 		String result = game.runGame();
 		assertTrue(result == "dealer" || result == "player");
 	}
 	
 	//how can this be tested automatically as it's dependent on user input?
-	public void promptForInputTypeTest() {
+	public void testPromptForInputType() {
 		GameController game = new GameController();
 		String inputType = game.promptForInputType();
 		assertTrue(inputType == "C" || inputType == "F");
 	}
 	
-	public void isValidFileTest() {
+	public void testIsValidFile() {
 		GameController game = new GameController();
 		
 		//tests file exists
-		File realFile = new File("src/main/resources/inputFile1.txt");
-		File fakeFile = new File("src/main/resources/fakeFile.txt");
-		assertTrue(game.isValidFile(realFile));
-		assertFalse(game.isValidFile(fakeFile));
+		String realFileDir = "src/main/resources/inputFile1.txt";
+		String fakeFileDir = "src/main/resources/fakeFile.txt";
+		assertTrue(game.isValidFile(realFileDir));
+		assertFalse(game.isValidFile(fakeFileDir));
 		
 		//tests file is correct format
-		File validFile = new File("src/main/resources/inputFile1.txt");
-		File invalidFile = new File("src/main/resources/invalidFile1.txt");
-		assertTrue(game.isValidFile(validFile));
-		assertFalse(game.isValidFile(invalidFile));
+		String validFileDir = "src/main/resources/inputFile1.txt";
+		String invalidFileDir = "src/main/resources/invalidFile1.txt";
+		assertTrue(game.isValidFile(validFileDir));
+		assertFalse(game.isValidFile(invalidFileDir));
 	}
 	
-	public void readFileToArrayTest() {
+	public void testConvertFileToArray() {
 		GameController game = new GameController();
 		File file = new File("src/main/resources/inputFile1.txt");
 		String[] expectedArray = {"S10", "D3", "SQ", "CS", "H", "H5", "H", "SA", "S", "CA", "D2"};
-		String[] actualArray = game.readFileToArray(file);
+		String[] actualArray = game.convertFileToArray(file);
 		
 		//verify actualArray = expectedArray
 		assertArrayEquals(expectedArray, actualArray);
 		
 	}
 	
-	public void playWithFileInputTest() {
+	public void testPlayWithFileInput() {
 		GameController game = new GameController();
 		
-		//test case where dealer wins
+		//test case where player wins
 		File file1 = new File("src/main/resources/inputFile1.txt");
-		String[] fileArray1 = game.readFileToArray(file1);
+		String[] fileArray1 = game.convertFileToArray(file1);
 		assertEquals("dealer", game.playWithFileInput(fileArray1));
 		
-		//test case where player wins
+		//test case where dealer wins
 		File file2 = new File("src/main/resources/inputFile2.txt");
-		String[] fileArray2 = game.readFileToArray(file2);
+		String[] fileArray2 = game.convertFileToArray(file2);
 		assertEquals("player", game.playWithFileInput(fileArray2));
 	}
 	
 	//how can this be tested automatically as it's dependent on user input?
-	public void playWithConsoleInputTest() {
+	public void testPlayWithConsoleInput() {
 		
 	}
 }
