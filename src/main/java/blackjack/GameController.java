@@ -2,10 +2,19 @@ package blackjack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class GameController {
 	private static Scanner scanner = new Scanner(System.in);
+	
+	private Player player;
+	private Dealer dealer;
+	
+	public GameController() {
+		 player = new Player();
+		 dealer = new Dealer();
+	}
 	
 	public String runGame() {
 		String winner = "";
@@ -76,7 +85,49 @@ public class GameController {
 	
 	//where the bulk of code will be
 	public String playWithFileInput(String[] moves) {
+		System.out.println(Arrays.toString(moves));
 		
-		return "";
+		Card card0 = new Card(moves[0]);
+		Card card1 = new Card(moves[1]);
+		player.addCard(card0);
+		player.addCard(card1);
+		
+		Card card2 = new Card(moves[2]);
+		Card card3 = new Card(moves[3]);
+		dealer.addCard(card2);
+		dealer.addCard(card3);
+		
+		System.out.println("Dealer: " + dealer.getCardStringHidden());
+		System.out.println("Dealer: " + dealer.getCardStringVisible());
+		System.out.println("Player: " + player.getCardString());
+		System.out.println("Player total: " + player.getTotal());
+		
+		//game is over if dealer or player get a blackjack (ie. 21)
+		if(dealer.getTotal() == 21) {
+			return "dealer";
+		}
+		else if(player.getTotal() == 21) {
+			return "player";
+		}	
+		
+		//if no blackjack, player prompted to hit or stand
+		int x = 4;
+		while(player.getTotal() < 21) {
+			if(moves[x].equals("H")) {
+				Card newCard = new Card(moves[x+1]);
+				player.addCard(newCard);
+				System.out.println("Player: " + player.getCardString());
+				System.out.println("Player total: " + player.getTotal());
+			}
+			
+			x += 2;
+		}
+		
+		if(player.getTotal() > 21) {
+			return "dealer";
+		}
+		else {
+			return "player";
+		}
 	}
 }
