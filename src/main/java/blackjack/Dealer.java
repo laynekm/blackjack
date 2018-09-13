@@ -62,4 +62,8 @@ public class Dealer {
 		
 		return returnString;
 	}
+	
+	public boolean hasSoft17() {
+		return dealerHand.hasSoft17();
+	}
 }
