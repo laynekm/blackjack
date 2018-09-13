@@ -6,14 +6,10 @@ import static org.junit.Assert.*;
 import java.io.File;
 
 public class GameControllerTest extends TestCase{
-	public void isValidTypeInput() {
+	public void runGameTest() {
 		GameController game = new GameController();
-		
-		//verify inputType can only be "C" or "F"
-		assertTrue(game.isValidTypeInput("C"));
-		assertTrue(game.isValidTypeInput("F"));
-		assertFalse(game.isValidTypeInput("X"));
-		assertFalse(game.isValidTypeInput(""));
+		String result = game.runGame();
+		assertTrue(result == "dealer" || result == "player");
 	}
 	
 	public void isValidFileTest() {
