@@ -20,13 +20,11 @@ public class Hand {
 		//first determine total without aces
 		for(int i = 0; i < cards.size(); i++) {
 			Card card = cards.get(i);
-			//System.out.println(card.getSuit());
-			System.out.println(card.getRank());
 			
-			if(card.getRank() == "A") {
+			if(card.getRank().equals("A")) {
 				continue;
 			}
-			else if(card.getRank() == "J" || card.getRank() == "Q" || card.getRank() == "K") {
+			else if(card.getRank().equals("J") || card.getRank().equals("Q") || card.getRank().equals("K")) {
 				total += 10;
 			}
 			else {
@@ -37,10 +35,10 @@ public class Hand {
 		//use this pre-total to determine whether ace should be 1 or 11
 		for(int i = 0; i < cards.size(); i++) {
 			Card card = cards.get(i);
-			if(card.getRank() == "A" && total <= 10) {
+			if(card.getRank().equals("A") && total <= 10) {
 				total += 11;
 			}
-			else if(card.getRank() == "A" && total > 10) {
+			else if(card.getRank().equals("A") && total > 10) {
 				total += 1;
 			}
 		}
