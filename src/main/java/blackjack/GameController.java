@@ -16,36 +16,43 @@ public class GameController {
 		 dealer = new Dealer();
 	}
 	
-	public String runGame() {
-		String winner = "";
-		String inputType = promptForInputType();
+	//Does this method require test cases? Just calls other methods, doesn't return anything
+	public void runGame() {
+		String inputType = "";
+		while(!isValidInputType(inputType)) {
+			System.out.print("Select console (C) or file (F) input: ");
+			inputType = scanner.nextLine();
+		}
 
 		if(inputType.equals("C")) {
 			Deck deck = new Deck();
 			deck.shuffle();
-			winner = playWithConsoleInput(deck);
-		}
-		else{
-			String fileName = promptForFileName();
-			String[] gameMoves = convertFileToArray(fileName);
-			winner = playWithFileInput(gameMoves);
+			playWithConsoleInput(deck);
 		}
 		
-		return winner;
+		else{
+			String fileName = "";
+			while(!isValidFile(fileName)) {
+				System.out.print("Enter file name: ");
+				fileName = scanner.nextLine();
+			}
+			String[] gameMoves = convertFileToArray(fileName);
+			playWithFileInput(gameMoves);
+		}
 	}
 	
 	//*********************
 	// GAME LOGIC METHODS
 	//*********************
 	public String playWithFileInput(String[] moves) {
-		System.out.println(Arrays.toString(moves));
+		System.out.println("\nInput array: " + Arrays.toString(moves));
 		
 		Card card0 = new Card(moves[0]);
 		Card card1 = new Card(moves[1]);
-		player.addCard(card0);
-		player.addCard(card1);
 		Card card2 = new Card(moves[2]);
 		Card card3 = new Card(moves[3]);
+		player.addCard(card0);
+		player.addCard(card1);
 		dealer.addCard(card2);
 		dealer.addCard(card3);
 		
@@ -108,46 +115,122 @@ public class GameController {
 		System.out.println("Dealer stands.\n");
 
 		if(player.getTotal() > dealer.getTotal()) {
-			System.out.println("Player's score is higher than dealer's score");
+			System.out.println("Player's score beat dealer's score");
 			endGame();
 			return "Player wins!";
 		}
 		else {
-			System.out.println("Dealer's score is higher than player's score");
+			System.out.println("Dealer's score beat player's score");
 			endGame();
 			return "Dealer wins!";
 		}
 	}
 	
 	public String playWithConsoleInput(Deck deck) {
-	
-		return "";
+		System.out.println("\nShuffled deck: ");
+		deck.printCards();
+		
+		Card card0 = deck.dealCard();
+		Card card1 = deck.dealCard();
+		Card card2 = deck.dealCard();
+		Card card3 = deck.dealCard();
+		player.addCard(card0);
+		player.addCard(card1);
+		dealer.addCard(card2);
+		dealer.addCard(card3);
+		
+		System.out.println("\nCards dealt:");
+		printGameDataDealerHidden();
+		
+		//game is over if dealer or player get a blackjack (ie. 21)
+		if(dealer.getTotal() == 21) { 
+			System.out.println("Dealer got a blackjack");
+			endGame();
+			return "Dealer wins!"; 
+		}
+		if(player.getTotal() == 21) { 
+			System.out.println("Player got a blackjack");
+			endGame();
+			return "Player wins!"; 
+		}	
+		
+		//if no blackjack, player prompted to hit or stand
+		int x = 4;
+		while(player.getTotal() < 21) {
+			String move = "";
+			while(!isValidMove(move)) {
+				System.out.print("Hit (H) or stand (S): ");
+				move = scanner.nextLine();
+			}
+			
+			if(move.equals("H")) {
+				System.out.println("Player hits:");
+				player.addCard(deck.dealCard());
+				printGameDataDealerHidden();
+				x += 2;
+			}
+			else {
+				System.out.println("Player stands.\n");
+				x += 1;
+				break;
+			}
+		}
+		
+		if(player.getTotal() > 21) { 
+			System.out.println("Player went bust! Total: " + player.getTotal());
+			endGame();
+			return "Dealer wins!";
+		}
+		
+		System.out.println("Dealer's card revealed:");
+		printGameDataDealerVisible();
+		
+		//dealer hits if has 16 or soft 17 (ie. one of cards is ace)
+		while(dealer.getTotal() <= 16 || dealer.hasSoft17() == true){
+			System.out.println("Dealer hits:");
+			Card newCard = deck.dealCard();
+			dealer.addCard(newCard);
+			printGameDataDealerVisible();
+			x += 1;
+		}
+		
+		if(dealer.getTotal() > 21) { 
+			System.out.println("Dealer went bust! Total: " + dealer.getTotal());
+			endGame();
+			return "Player wins!";
+		}
+		
+		System.out.println("Dealer stands.\n");
+
+		if(player.getTotal() > dealer.getTotal()) {
+			System.out.println("Player's score beat dealer's score");
+			endGame();
+			return "Player wins!";
+		}
+		else {
+			System.out.println("Dealer's score beat player's score");
+			endGame();
+			return "Dealer wins!";
+		}
 	}
 	
 	//******************
 	// UTILITY METHODS
 	//******************
-	public String promptForInputType() {
-		String inputType = "";
-		
-		while(!inputType.equals("C") && !inputType.equals("F")) {
-			System.out.print("Select console (C) or file (F) input: ");
-			inputType = scanner.nextLine();
+	public boolean isValidInputType(String inputType) {
+		if(inputType.equals("C") || inputType.equals("F")) {
+			return true;
 		}
+		return false;
+	}
+	
+	public boolean isValidMove(String move) {
+		if(move.equals("H") || move.equals("S")) {
+			return true;
+		}
+		return false;
+	}
 
-		return inputType;
-	}
-	
-	public String promptForFileName() {
-		String fileName = "";
-		
-		while(isValidFile(fileName) == false) {
-			System.out.print("Enter file name: ");
-			fileName = scanner.nextLine();
-		}
-		return fileName;
-	}
-	
 	public boolean isValidFile(String fileName) {
 		File file = new File(fileName);
 		if(file.exists()) {
