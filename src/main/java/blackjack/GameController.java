@@ -34,6 +34,99 @@ public class GameController {
 		return winner;
 	}
 	
+	//*********************
+	// GAME LOGIC METHODS
+	//*********************
+	public String playWithFileInput(String[] moves) {
+		System.out.println(Arrays.toString(moves));
+		
+		Card card0 = new Card(moves[0]);
+		Card card1 = new Card(moves[1]);
+		player.addCard(card0);
+		player.addCard(card1);
+		Card card2 = new Card(moves[2]);
+		Card card3 = new Card(moves[3]);
+		dealer.addCard(card2);
+		dealer.addCard(card3);
+		
+		System.out.println("\nCards dealt:");
+		printGameDataDealerHidden();
+		
+		//game is over if dealer or player get a blackjack (ie. 21)
+		if(dealer.getTotal() == 21) { 
+			System.out.println("Dealer got a blackjack");
+			endGame();
+			return "Dealer wins!"; 
+		}
+		if(player.getTotal() == 21) { 
+			System.out.println("Player got a blackjack");
+			endGame();
+			return "Player wins!"; 
+		}	
+		
+		//if no blackjack, player prompted to hit or stand
+		int x = 4;
+		while(player.getTotal() < 21 && x < moves.length) {
+			if(moves[x].equals("H")) {
+				System.out.println("Player hits:");
+				Card newCard = new Card(moves[x+1]);
+				player.addCard(newCard);
+				printGameDataDealerHidden();
+				x += 2;
+			}
+			else {
+				System.out.println("Player stands.\n");
+				x += 1;
+				break;
+			}
+		}
+		
+		if(player.getTotal() > 21) { 
+			System.out.println("Player went bust! Total: " + player.getTotal());
+			endGame();
+			return "Dealer wins!";
+		}
+		
+		System.out.println("Dealer's card revealed:");
+		printGameDataDealerVisible();
+		
+		//dealer hits if has 16 or soft 17 (ie. one of cards is ace)
+		while((dealer.getTotal() <= 16 || dealer.hasSoft17() == true) && x < moves.length){
+			System.out.println("Dealer hits:");
+			Card newCard = new Card(moves[x]);
+			dealer.addCard(newCard);
+			printGameDataDealerVisible();
+			x += 1;
+		}
+		
+		if(dealer.getTotal() > 21) { 
+			System.out.println("Dealer went bust! Total: " + dealer.getTotal());
+			endGame();
+			return "Player wins!";
+		}
+		
+		System.out.println("Dealer stands.\n");
+
+		if(player.getTotal() > dealer.getTotal()) {
+			System.out.println("Player's score is higher than dealer's score");
+			endGame();
+			return "Player wins!";
+		}
+		else {
+			System.out.println("Dealer's score is higher than player's score");
+			endGame();
+			return "Dealer wins!";
+		}
+	}
+	
+	public String playWithConsoleInput(Deck deck) {
+	
+		return "";
+	}
+	
+	//******************
+	// UTILITY METHODS
+	//******************
 	public String promptForInputType() {
 		String inputType = "";
 		
@@ -53,11 +146,6 @@ public class GameController {
 			fileName = scanner.nextLine();
 		}
 		return fileName;
-	}
-	
-	public String playWithConsoleInput(Deck deck) {
-		
-		return "";
 	}
 	
 	public boolean isValidFile(String fileName) {
@@ -83,64 +171,6 @@ public class GameController {
 		return returnArray;
 	}
 	
-	//where the bulk of code will be
-	public String playWithFileInput(String[] moves) {
-		System.out.println(Arrays.toString(moves));
-		
-		Card card0 = new Card(moves[0]);
-		Card card1 = new Card(moves[1]);
-		player.addCard(card0);
-		player.addCard(card1);
-		
-		Card card2 = new Card(moves[2]);
-		Card card3 = new Card(moves[3]);
-		dealer.addCard(card2);
-		dealer.addCard(card3);
-		
-		printGameDataDealerHidden();
-		
-		//game is over if dealer or player get a blackjack (ie. 21)
-		if(dealer.getTotal() == 21) { return "dealer"; }
-		if(player.getTotal() == 21) { return "player"; }	
-		
-		//if no blackjack, player prompted to hit or stand
-		int x = 4;
-		while(player.getTotal() < 21 && x < moves.length) {
-			if(moves[x].equals("H")) {
-				Card newCard = new Card(moves[x+1]);
-				player.addCard(newCard);
-				printGameDataDealerHidden();
-				x += 2;
-			}
-			else {
-				x += 1;
-				break;
-			}
-		}
-		
-		if(player.getTotal() > 21) { 
-			System.out.println("Player went bust! Total: " + player.getTotal());
-			return "dealer"; 
-		}
-		
-		printGameDataDealerVisible();
-		
-		//dealer hits if has 16 or soft 17 (ie. one of cards is ace)
-		while((dealer.getTotal() <= 16 || dealer.hasSoft17() == true) && x < moves.length){
-			Card newCard = new Card(moves[x]);
-			dealer.addCard(newCard);
-			printGameDataDealerVisible();
-			x += 1;
-		}
-		
-		if(player.getTotal() > dealer.getTotal()) {
-			return "player";
-		}
-		else {
-			return "dealer";
-		}
-	}
-	
 	public void printGameDataDealerHidden() {
 		System.out.println("Dealer: " + dealer.getCardStringHidden());
 		System.out.println("Player: " + player.getCardString());
@@ -155,5 +185,10 @@ public class GameController {
 		System.out.println("Dealer total: " + dealer.getTotal());
 		System.out.println("Player total: " + player.getTotal());
 		System.out.println();
+	}
+	
+	private void endGame() {
+		player.clearCards();
+		dealer.clearCards();
 	}
 }
