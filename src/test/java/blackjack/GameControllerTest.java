@@ -78,6 +78,8 @@ public class GameControllerTest extends TestCase{
 		GameController game = new GameController();
 		Deck deck = new Deck();
 		deck.shuffle();
+		//game.playWithConsoleInput(deck);
+		
 		assertTrue(game.playWithConsoleInput(deck) == "Player wins!" || game.playWithConsoleInput(deck) == "Dealer wins!");
 	}
 }
