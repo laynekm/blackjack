@@ -66,4 +66,8 @@ public class Dealer {
 	public boolean hasSoft17() {
 		return dealerHand.hasSoft17();
 	}
+	
+	public void clearCards() {
+		dealerHand.clear();
+	}
 }

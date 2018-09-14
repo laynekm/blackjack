@@ -36,4 +36,8 @@ public class Player {
 		
 		return returnString;
 	}
+	
+	public void clearCards() {
+		playerHand.clear();
+	}
 }

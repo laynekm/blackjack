@@ -58,6 +58,10 @@ public class Hand {
 		return false;
 	}
 	
+	public void clear() {
+		cards.clear();
+	}
+	
 	public List<Card> getCards(){
 		return cards;
 	}
