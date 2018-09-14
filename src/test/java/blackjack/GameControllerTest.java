@@ -16,6 +16,14 @@ public class GameControllerTest extends TestCase{
 		assertFalse(game.isValidInputType(""));
 	}
 	
+	public void testIsValidMove() {
+		GameController game = new GameController();
+		assertTrue(game.isValidMove("H"));
+		assertTrue(game.isValidMove("S"));
+		assertFalse(game.isValidMove("X"));
+		assertFalse(game.isValidMove(""));
+	}
+	
 	public void testIsValidFile() {
 		GameController game = new GameController();
 		
@@ -65,9 +73,11 @@ public class GameControllerTest extends TestCase{
 		assertTrue(game.playWithFileInput(fileArray7).equals("Dealer wins!"));
 	}
 	
-	//how can this be tested automatically as it's dependent on user input?
+	//not entirely sure how this is supposed to be tested
 	public void testPlayWithConsoleInput() {
+		GameController game = new GameController();
 		Deck deck = new Deck();
 		deck.shuffle();
+		assertTrue(game.playWithConsoleInput(deck) == "Player wins!" || game.playWithConsoleInput(deck) == "Dealer wins!");
 	}
 }
