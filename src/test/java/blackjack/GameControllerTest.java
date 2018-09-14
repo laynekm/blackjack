@@ -57,17 +57,29 @@ public class GameControllerTest extends TestCase{
 	public void testPlayWithFileInput() {
 		GameController game = new GameController();
 		
-		//test case where player wins
-		/*
-		String fileName1 = "src/main/resources/inputFile1.txt";
-		String[] fileArray1 = game.convertFileToArray(fileName1);
-		assertTrue("dealer".equals(game.playWithFileInput(fileArray1)));
-		*/
+		String fileName1 = "src/main/resources/playerWinsBlackjack.txt";
+		String fileName2 = "src/main/resources/dealerWinsBlackjack.txt";
+		String fileName3 = "src/main/resources/playerGoesBust.txt";
+		String fileName4 = "src/main/resources/dealerGoesBust.txt";
+		String fileName5 = "src/main/resources/playerScoreHigher.txt";
+		String fileName6 = "src/main/resources/dealerScoreHigher.txt";
+		String fileName7 = "src/main/resources/scoresEqual.txt";
 		
-		//test case where dealer wins
-		String fileName2 = "src/main/resources/inputFile3.txt";
+		String[] fileArray1 = game.convertFileToArray(fileName1);
 		String[] fileArray2 = game.convertFileToArray(fileName2);
-		System.out.println(game.playWithFileInput(fileArray2) + " wins!");
+		String[] fileArray3 = game.convertFileToArray(fileName3);
+		String[] fileArray4 = game.convertFileToArray(fileName4);
+		String[] fileArray5 = game.convertFileToArray(fileName5);
+		String[] fileArray6 = game.convertFileToArray(fileName6);
+		String[] fileArray7 = game.convertFileToArray(fileName7);
+		
+		assertTrue(game.playWithFileInput(fileArray1).equals("Player wins!"));
+		assertTrue(game.playWithFileInput(fileArray2).equals("Dealer wins!"));
+		assertTrue(game.playWithFileInput(fileArray3).equals("Dealer wins!"));
+		assertTrue(game.playWithFileInput(fileArray4).equals("Player wins!"));
+		assertTrue(game.playWithFileInput(fileArray5).equals("Player wins!"));
+		assertTrue(game.playWithFileInput(fileArray6).equals("Dealer wins!"));
+		assertTrue(game.playWithFileInput(fileArray7).equals("Dealer wins!"));
 	}
 	
 	//how can this be tested automatically as it's dependent on user input?
