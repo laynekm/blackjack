@@ -7,23 +7,13 @@ import java.io.File;
 import java.util.Scanner;
 
 public class GameControllerTest extends TestCase{
-	/*
-	public void testRunGame() {
-		GameController game = new GameController();
-		String result = game.runGame();
-		assertTrue(result == "dealer" || result == "player");
-	}
 	
-	public void testPromptForInputType() {
+	public void testIsValidInputType() {
 		GameController game = new GameController();
-		String inputType = game.promptForInputType();
-		assertTrue(inputType.equals("C") || inputType.equals("F"));
-	}
-	
-	public void testPromptForFileName() {
-		GameController game = new GameController();
-		String fileName = game.promptForFileName();
-		assertTrue(game.isValidFile(fileName));
+		assertTrue(game.isValidInputType("C"));
+		assertTrue(game.isValidInputType("F"));
+		assertFalse(game.isValidInputType("X"));
+		assertFalse(game.isValidInputType(""));
 	}
 	
 	public void testIsValidFile() {
@@ -34,12 +24,6 @@ public class GameControllerTest extends TestCase{
 		String fakeFileName = "src/main/resources/fakeFile.txt";
 		assertTrue(game.isValidFile(realFileName));
 		assertFalse(game.isValidFile(fakeFileName));
-		
-		//tests file is correct format
-		String validFileName = "src/main/resources/inputFile1.txt";
-		String invalidFileName = "src/main/resources/invalidFile1.txt";
-		assertTrue(game.isValidFile(validFileName));
-		assertFalse(game.isValidFile(invalidFileName));
 	}
 	
 	public void testConvertFileToArray() {
@@ -52,7 +36,6 @@ public class GameControllerTest extends TestCase{
 		assertArrayEquals(expectedArray, actualArray);
 		
 	}
-	*/
 	
 	public void testPlayWithFileInput() {
 		GameController game = new GameController();
@@ -84,6 +67,7 @@ public class GameControllerTest extends TestCase{
 	
 	//how can this be tested automatically as it's dependent on user input?
 	public void testPlayWithConsoleInput() {
-
+		Deck deck = new Deck();
+		deck.shuffle();
 	}
 }
