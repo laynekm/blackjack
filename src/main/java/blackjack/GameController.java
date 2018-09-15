@@ -16,9 +16,9 @@ public class GameController {
 		 dealer = new Dealer();
 	}
 	
-	//********************************
-	// GAME LOGIC METHOD
-	//********************************
+	//************************
+	// MAIN GAME LOGIC METHOD
+	//************************
 	public String playGame(String[] moves, String inputMode) {
 		System.out.println("\nInput array: " + Arrays.toString(moves));
 		
@@ -191,48 +191,10 @@ public class GameController {
 		String winner = determineWinner(player, dealer);
 		return winner;
 	}
-
-	//******************
+	
+	//*****************
 	// UTILITY METHODS
-	//******************
-	
-	//prompt for user input; can't really have test case for these, but do have for validation methods
-	public String promptInputType() {
-		String input = "";
-		while(!isValidInputType(input)) {
-			System.out.print("Console (C) or file (F) input: ");
-			input = scanner.nextLine();
-		}
-		return input;
-	}
-	
-	public String promptFileName() {
-		String input = "";
-		while(!isValidFile(input)) {
-			System.out.print("Enter file name: ");
-			input = scanner.nextLine();
-		}
-		return input;
-	}
-	
-	public String promptMove() {
-		String input = "";
-		while(!isValidMove(input)) {
-			System.out.print("Hit (H) or Stand (S): ");
-			input = scanner.nextLine();
-		}
-		return input;
-	}
-	
-	public String promptMoveWithSplit() {
-		String input = "";
-		while(!isValidMoveWithSplit(input)) {
-			System.out.print("Hit (H), Stand (S), or Split (D): ");
-			input = scanner.nextLine();
-		}
-		return input;
-	}
-	
+	//*****************
 	//user input validation methods
 	public boolean isValidInputType(String inputType) {
 		if(inputType.equals("C") || inputType.equals("F")) {
@@ -280,6 +242,64 @@ public class GameController {
 		return returnArray;
 	}
 	
+	//clears player and dealer cards, used for testing
+	public void endGame() {
+		player.clearCards();
+		dealer.clearCards();
+	}
+	
+	//determines
+	public String determineWinner(Player player, Dealer dealer) {
+		Hand bestPlayerHand = player.getBestHand();
+		Hand bestDealerHand = dealer.getBestHand();
+		if(bestPlayerHand.getTotal() > bestDealerHand.getTotal()) {
+			return "Player wins!";
+		}
+		else {
+			return "Dealer wins!";
+		}
+	}
+	
+	//*****************************
+	// USER PROMPT/DISPLAY METHODS
+	// can't really have test cases for these, only for the validation methods they call
+	//*****************************
+	public String promptInputType() {
+		String input = "";
+		while(!isValidInputType(input)) {
+			System.out.print("Console (C) or file (F) input: ");
+			input = scanner.nextLine();
+		}
+		return input;
+	}
+	
+	public String promptFileName() {
+		String input = "";
+		while(!isValidFile(input)) {
+			System.out.print("Enter file name: ");
+			input = scanner.nextLine();
+		}
+		return input;
+	}
+	
+	public String promptMove() {
+		String input = "";
+		while(!isValidMove(input)) {
+			System.out.print("Hit (H) or Stand (S): ");
+			input = scanner.nextLine();
+		}
+		return input;
+	}
+	
+	public String promptMoveWithSplit() {
+		String input = "";
+		while(!isValidMoveWithSplit(input)) {
+			System.out.print("Hit (H), Stand (S), or Split (D): ");
+			input = scanner.nextLine();
+		}
+		return input;
+	}
+	
 	//prints all cards
 	public void printGameDataDealerHidden() {
 		System.out.println("Dealer:              " + dealer.getCardStringHidden());
@@ -318,23 +338,5 @@ public class GameController {
 
 		}
 		System.out.println();
-	}
-	
-	//clears player and dealer cards, used for testing
-	public void endGame() {
-		player.clearCards();
-		dealer.clearCards();
-	}
-	
-	//determines
-	public String determineWinner(Player player, Dealer dealer) {
-		Hand bestPlayerHand = player.getBestHand();
-		Hand bestDealerHand = dealer.getBestHand();
-		if(bestPlayerHand.getTotal() > bestDealerHand.getTotal()) {
-			return "Player wins!";
-		}
-		else {
-			return "Dealer wins!";
-		}
 	}
 }
