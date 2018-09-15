@@ -10,10 +10,50 @@ public class Hand {
 		cards = new ArrayList<Card>();
 	}
 	
-	public void addCard(Card card) {
-		cards.add(card);
+	//removes card from end of hand, used for splitting
+	public Card popCard() {
+		if(cards.size() == 0) {
+			return null;
+		}
+		
+		return cards.remove(cards.size() - 1);
 	}
 	
+	//returns size
+	public int getSize() {
+		return cards.size();
+	}
+	
+	//adds card to hand, returns false if bust (ie. total > 21)
+	public boolean hit(Card card) {
+		cards.add(card);
+		if(getTotal() > 21) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//checks if player has blackjack (ie. 2 cards and total = 21)
+	public boolean hasBlackjack() {
+		if(cards.size() == 2 && getTotal() == 21) {
+			return true;
+		}
+		return false;
+	}
+	
+	//checks if player can split (ie. cards have same rank)
+	public boolean canSplit() {
+		if(cards.size() == 0) {
+			return false;
+		}
+		if(cards.get(0).getRank().equals(cards.get(1).getRank())) {
+			return true;
+		}
+		return false;
+	}
+	
+	//returns total, accounting for whether aces are worth 1 or 11
 	public int getTotal() {
 		int total = 0;
 		
@@ -46,6 +86,7 @@ public class Hand {
 		return total;
 	}
 	
+	//checks if player has soft 17 (ie. score is 17 and one of the cards is an ace)
 	public boolean hasSoft17() {
 		if(getTotal() == 17) {
 			for(int i = 0; i < cards.size(); i++) {
@@ -58,10 +99,12 @@ public class Hand {
 		return false;
 	}
 	
+	//deletes all cards in hand
 	public void clear() {
 		cards.clear();
 	}
 	
+	//returns list of cards
 	public List<Card> getCards(){
 		return cards;
 	}
