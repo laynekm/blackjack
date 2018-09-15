@@ -87,4 +87,42 @@ public class PlayerTest extends TestCase{
 		Player player3 = new Player();
 		assertFalse(player3.hasSplit());
 	}
+	
+	public void testGetBestHand() {
+		//test case where one hand > other hand
+		Player player1 = new Player();
+		Card card1 = new Card("D5");
+		Card card2 = new Card("S2");
+		Card card3 = new Card("SK");
+		Card card4 = new Card("DK");
+		player1.hit(card1);
+		player1.hit(card2);
+		player1.hitSplit(card3);
+		player1.hitSplit(card4);
+		assertEquals(20, player1.getBestHand().getTotal());
+				
+		//test case where one hand is bust
+		Player player2 = new Player();
+		Card card5 = new Card("D5");
+		Card card6 = new Card("S2");
+		Card card7 = new Card("SK");
+		Card card8 = new Card("DK");
+		Card card9 = new Card("DJ");
+		player2.hit(card5);
+		player2.hit(card6);
+		player2.hitSplit(card7);
+		player2.hitSplit(card8);
+		player2.hitSplit(card9);
+		assertEquals(7, player2.getBestHand().getTotal());
+		
+		//test case where both hands bust
+		Player player3 = new Player();
+		player3.hit(card1);
+		player3.hit(card3);
+		player3.hit(card4);
+		player3.hitSplit(card7);
+		player3.hitSplit(card8);
+		player3.hitSplit(card9);
+		assertEquals(null, player3.getBestHand());
+	}
 }

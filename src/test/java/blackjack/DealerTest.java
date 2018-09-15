@@ -149,4 +149,42 @@ public class DealerTest extends TestCase{
 		dealer3.hitSplit(card6);
 		assertEquals("H", dealer3.determineHitSplit());
 	}
+	
+	public void testGetBestHand() {
+		//test case where one hand > other hand
+		Dealer dealer1 = new Dealer();
+		Card card1 = new Card("D5");
+		Card card2 = new Card("S2");
+		Card card3 = new Card("SK");
+		Card card4 = new Card("DK");
+		dealer1.hit(card1);
+		dealer1.hit(card2);
+		dealer1.hitSplit(card3);
+		dealer1.hitSplit(card4);
+		assertEquals(20, dealer1.getBestHand().getTotal());
+				
+		//test case where one hand is bust
+		Dealer dealer2 = new Dealer();
+		Card card5 = new Card("D5");
+		Card card6 = new Card("S2");
+		Card card7 = new Card("SK");
+		Card card8 = new Card("DK");
+		Card card9 = new Card("DJ");
+		dealer2.hit(card5);
+		dealer2.hit(card6);
+		dealer2.hitSplit(card7);
+		dealer2.hitSplit(card8);
+		dealer2.hitSplit(card9);
+		assertEquals(7, dealer2.getBestHand().getTotal());
+		
+		//test case where both hands bust
+		Dealer dealer3 = new Dealer();
+		dealer3.hit(card1);
+		dealer3.hit(card3);
+		dealer3.hit(card4);
+		dealer3.hitSplit(card7);
+		dealer3.hitSplit(card8);
+		dealer3.hitSplit(card9);
+		assertEquals(null, dealer3.getBestHand());
+	}
 }
