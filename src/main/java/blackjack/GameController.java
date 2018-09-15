@@ -16,207 +16,224 @@ public class GameController {
 		 dealer = new Dealer();
 	}
 	
-	//Does this method require test cases? Just calls other methods, doesn't return anything
-	public void runGame() {
-		String inputType = "";
-		while(!isValidInputType(inputType)) {
-			System.out.print("Select console (C) or file (F) input: ");
-			inputType = scanner.nextLine();
-		}
-
-		if(inputType.equals("C")) {
-			Deck deck = new Deck();
-			deck.shuffle();
-			playWithConsoleInput(deck);
-		}
-		
-		else{
-			String fileName = "";
-			while(!isValidFile(fileName)) {
-				System.out.print("Enter file name: ");
-				fileName = scanner.nextLine();
-			}
-			String[] gameMoves = convertFileToArray(fileName);
-			playWithFileInput(gameMoves);
-		}
-	}
-	
-	//*********************
-	// GAME LOGIC METHODS
-	//*********************
-	public String playWithFileInput(String[] moves) {
+	//********************************
+	// GAME LOGIC METHOD
+	//********************************
+	public String playGame(String[] moves, String inputMode) {
 		System.out.println("\nInput array: " + Arrays.toString(moves));
 		
-		Card card0 = new Card(moves[0]);
-		Card card1 = new Card(moves[1]);
-		Card card2 = new Card(moves[2]);
-		Card card3 = new Card(moves[3]);
-		player.addCard(card0);
-		player.addCard(card1);
-		dealer.addCard(card2);
-		dealer.addCard(card3);
+		//determines how input will be gathered
+		boolean consoleInput;
+		if(inputMode.equals("C")) { consoleInput = true; }
+		else { 						consoleInput = false; }
 		
-		System.out.println("\nCards dealt:");
-		printGameDataDealerHidden();
-		
-		//game is over if dealer or player get a blackjack (ie. 21)
-		if(dealer.getTotal() == 21) { 
-			System.out.println("Dealer got a blackjack");
-			endGame();
-			return "Dealer wins!"; 
-		}
-		if(player.getTotal() == 21) { 
-			System.out.println("Player got a blackjack");
-			endGame();
-			return "Player wins!"; 
-		}	
-		
-		//if no blackjack, player prompted to hit or stand
-		int x = 4;
-		while(player.getTotal() < 21 && x < moves.length) {
-			if(moves[x].equals("H")) {
-				System.out.println("Player hits:");
-				Card newCard = new Card(moves[x+1]);
-				player.addCard(newCard);
-				printGameDataDealerHidden();
-				x += 2;
-			}
-			else {
-				System.out.println("Player stands.\n");
-				x += 1;
-				break;
-			}
-		}
-		
-		if(player.getTotal() > 21) { 
-			System.out.println("Player went bust! Total: " + player.getTotal());
-			endGame();
-			return "Dealer wins!";
-		}
-		
-		System.out.println("Dealer's card revealed:");
-		printGameDataDealerVisible();
-		
-		//dealer hits if has 16 or soft 17 (ie. one of cards is ace)
-		while((dealer.getTotal() <= 16 || dealer.hasSoft17() == true) && x < moves.length){
-			System.out.println("Dealer hits:");
-			Card newCard = new Card(moves[x]);
-			dealer.addCard(newCard);
-			printGameDataDealerVisible();
-			x += 1;
-		}
-		
-		if(dealer.getTotal() > 21) { 
-			System.out.println("Dealer went bust! Total: " + dealer.getTotal());
-			endGame();
-			return "Player wins!";
-		}
-		
-		System.out.println("Dealer stands.\n");
+		//variables used, x tracks pos in input array
+		String playerMove = "";
+		int x = 0;
 
-		if(player.getTotal() > dealer.getTotal()) {
-			System.out.println("Player's score beat dealer's score");
-			endGame();
-			return "Player wins!";
-		}
-		else {
-			System.out.println("Dealer's score beat player's score");
-			endGame();
-			return "Dealer wins!";
-		}
-	}
-	
-	public String playWithConsoleInput(Deck deck) {
-		System.out.println("\nShuffled deck: ");
-		deck.printCards();
-		
-		Card card0 = deck.dealCard();
-		Card card1 = deck.dealCard();
-		Card card2 = deck.dealCard();
-		Card card3 = deck.dealCard();
-		player.addCard(card0);
-		player.addCard(card1);
-		dealer.addCard(card2);
-		dealer.addCard(card3);
+		Card card0 = new Card(moves[x++]);
+		Card card1 = new Card(moves[x++]);
+		Card card2 = new Card(moves[x++]);
+		Card card3 = new Card(moves[x++]);
+		player.hit(card0);
+		player.hit(card1);
+		dealer.hit(card2);
+		dealer.hit(card3);
 		
 		System.out.println("\nCards dealt:");
 		printGameDataDealerHidden();
 		
 		//game is over if dealer or player get a blackjack (ie. 21)
-		if(dealer.getTotal() == 21) { 
-			System.out.println("Dealer got a blackjack");
-			endGame();
+		if(dealer.hasBlackjack()) {
+			System.out.println("Dealer's cards revealed:");
+			printGameDataDealerVisible();
+			System.out.println("Dealer got blackjack!");
 			return "Dealer wins!"; 
 		}
-		if(player.getTotal() == 21) { 
-			System.out.println("Player got a blackjack");
-			endGame();
+		if(player.hasBlackjack()) { 
+			System.out.println("Dealer's cards revealed:");
+			printGameDataDealerVisible();
+			System.out.println("Player got blackjack!");
 			return "Player wins!"; 
-		}	
+		}
 		
-		//if no blackjack, player prompted to hit or stand
-		int x = 4;
-		while(player.getTotal() < 21) {
-			String move = "";
-			while(!isValidMove(move)) {
-				System.out.print("Hit (H) or stand (S): ");
-				move = scanner.nextLine();
+		//split player hand if able to and player decides to
+		if(consoleInput && player.canSplit()) { 		playerMove = promptMoveWithSplit(); }
+		else if(consoleInput) { 						playerMove = promptMove(); }
+		else { 											playerMove = moves[x]; }
+		if(player.canSplit() && playerMove.equals("D")) {
+			x++;
+			System.out.println("Player splits:");
+			player.split();
+			System.out.println(moves[x].toString());
+			Card card4 = new Card(moves[x++]);
+			player.hit(card4);
+			printGameDataDealerHidden();
+		}
+		
+		//player hits or stands
+		if(!consoleInput) { playerMove = moves[x++]; }
+		while(playerMove.equals("H")) {
+			playerMove = "";
+			System.out.println("Player hits:");
+			Card card = new Card(moves[x++]);
+			if(!player.hit(card)) {
+				printGameDataDealerHidden();
+				if(player.hasSplit()) {
+					System.out.println("Player went bust on first hand! Total: " + player.getTotal());
+				}
+				else {
+					System.out.println("Player went bust! Total: " + player.getTotal());
+					return "Dealer wins!"; 
+				}
+			}
+			printGameDataDealerHidden();
+			if(consoleInput) { 	playerMove = promptMove(); }
+			else { 				playerMove = moves[x++]; }
+		}
+		
+		if(playerMove.equals("S")) {
+			System.out.println("\nPlayer stands.\n");
+		}
+		
+		//if player has split, now hits or stands on split
+		if(player.hasSplit()) {
+			
+			//second card automatically gets dealt to second hand
+			System.out.println("Player hits on second hand:");
+			Card card5 = new Card(moves[x++]);
+			if(!player.hitSplit(card5)) {
+				printGameDataDealerHidden();
+				System.out.println("Player went bust on second hand! Total: " + player.getTotal());
+			}
+			printGameDataDealerHidden();
+			
+			//decides whether user hits on second hand
+			if(consoleInput) { 	playerMove = promptMove(); }
+			else { 				playerMove = moves[x++]; }
+			while(playerMove.equals("H")) {
+				playerMove = "";
+				System.out.println("Player hits on second hand:");
+				Card card6 = new Card(moves[x++]);
+				if(!player.hitSplit(card6)) {
+					printGameDataDealerVisible();
+					System.out.println("Player went bust on second hand! Total: " + player.getTotal());
+				}
+				printGameDataDealerHidden();
 			}
 			
-			if(move.equals("H")) {
-				System.out.println("Player hits:");
-				player.addCard(deck.dealCard());
-				printGameDataDealerHidden();
-				x += 2;
+			if(player.getTotal() > 21 && player.getTotalSplit() > 21) {
+				System.out.println("Player went bust on both hands!");
+				return "Dealer wins!"; 
 			}
-			else {
-				System.out.println("Player stands.\n");
-				x += 1;
-				break;
-			}
-		}
-		
-		if(player.getTotal() > 21) { 
-			System.out.println("Player went bust! Total: " + player.getTotal());
-			endGame();
-			return "Dealer wins!";
+			
+			System.out.println("Player stands.\n");
 		}
 		
 		System.out.println("Dealer's card revealed:");
 		printGameDataDealerVisible();
 		
-		//dealer hits if has 16 or soft 17 (ie. one of cards is ace)
-		while(dealer.getTotal() <= 16 || dealer.hasSoft17() == true){
-			System.out.println("Dealer hits:");
-			Card newCard = deck.dealCard();
-			dealer.addCard(newCard);
+		//split dealer hand
+		if(dealer.canSplit() && dealer.determineHit().equals("H")) {
+			System.out.println("Dealer splits:");
+			dealer.split();
+			Card card4 = new Card(moves[x++]);
+			dealer.hit(card4);
 			printGameDataDealerVisible();
-			x += 1;
 		}
 		
-		if(dealer.getTotal() > 21) { 
-			System.out.println("Dealer went bust! Total: " + dealer.getTotal());
-			endGame();
-			return "Player wins!";
+		while(dealer.determineHit().equals("H")) {
+			System.out.println("Dealer hits:");
+			Card card = new Card(moves[x++]);
+			if(!dealer.hit(card)) {
+				printGameDataDealerVisible();
+				if(dealer.hasSplit()) {
+					System.out.println("Dealer went bust on first hand! Total: " + dealer.getTotal());
+				}
+				else {
+					System.out.println("Dealer went bust! Total: " + dealer.getTotal());
+					return "Player wins!"; 
+				}
+			}
+			printGameDataDealerVisible();
 		}
 		
 		System.out.println("Dealer stands.\n");
 
-		if(player.getTotal() > dealer.getTotal()) {
-			System.out.println("Player's score beat dealer's score");
-			endGame();
-			return "Player wins!";
+		//if dealer has split, now hits or stands on split
+		if(dealer.hasSplit()) {
+			
+			//second hand gets card delt automatically
+			System.out.println("Dealer hits on second hand:");
+			Card card6 = new Card(moves[x++]);
+			if(!dealer.hitSplit(card6)) {
+				printGameDataDealerVisible();
+				System.out.println("Dealer went bust on second hand! Total: " + dealer.getTotal());
+			}
+			printGameDataDealerVisible();
+			
+			while(dealer.determineHitSplit().equals("H")) {
+				System.out.println("Dealer hits on second hand:");
+				Card card = new Card(moves[x++]);
+				if(!dealer.hitSplit(card)) {
+					printGameDataDealerVisible();
+					System.out.println("Dealer went bust on second hand! Total: " + dealer.getTotal());
+				}
+				printGameDataDealerVisible();
+			}
+			
+			if(dealer.getTotal() > 21 && dealer.getTotalSplit() > 21) {
+				System.out.println("Dealer went bust on both hands!");
+				return "Player wins!"; 
+			}
 		}
-		else {
-			System.out.println("Dealer's score beat player's score");
-			endGame();
-			return "Dealer wins!";
-		}
+		
+		String winner = determineWinner(player, dealer);
+		return winner;
 	}
-	
+
 	//******************
 	// UTILITY METHODS
 	//******************
+	
+	//prompt for user input; can't really have test case for these, but do have for validation methods
+	public String promptInputType() {
+		String input = "";
+		while(!isValidInputType(input)) {
+			System.out.print("Console (C) or file (F) input: ");
+			input = scanner.nextLine();
+		}
+		return input;
+	}
+	
+	public String promptFileName() {
+		String input = "";
+		while(!isValidFile(input)) {
+			System.out.print("Enter file name: ");
+			input = scanner.nextLine();
+		}
+		return input;
+	}
+	
+	public String promptMove() {
+		String input = "";
+		while(!isValidMove(input)) {
+			System.out.print("Hit (H) or Stand (S): ");
+			input = scanner.nextLine();
+		}
+		return input;
+	}
+	
+	public String promptMoveWithSplit() {
+		String input = "";
+		while(!isValidMoveWithSplit(input)) {
+			System.out.print("Hit (H), Stand (S), or Split (D): ");
+			input = scanner.nextLine();
+		}
+		return input;
+	}
+	
+	//user input validation methods
 	public boolean isValidInputType(String inputType) {
 		if(inputType.equals("C") || inputType.equals("F")) {
 			return true;
@@ -230,7 +247,15 @@ public class GameController {
 		}
 		return false;
 	}
+	
+	public boolean isValidMoveWithSplit(String move) {
+		if(move.equals("H") || move.equals("S") || move.equals("D")) {
+			return true;
+		}
+		return false;
+	}
 
+	//verifies whether a file exists and is of valid format
 	public boolean isValidFile(String fileName) {
 		File file = new File(fileName);
 		if(file.exists()) {
@@ -240,6 +265,7 @@ public class GameController {
 		return false;
 	}
 	
+	//reads file and puts data into array of strings
 	public String[] convertFileToArray(String fileName){
 		Scanner fileScanner;
 		String tempString = "";
@@ -254,24 +280,61 @@ public class GameController {
 		return returnArray;
 	}
 	
+	//prints all cards
 	public void printGameDataDealerHidden() {
-		System.out.println("Dealer: " + dealer.getCardStringHidden());
-		System.out.println("Player: " + player.getCardString());
-		System.out.println("Dealer total: ?");
-		System.out.println("Player total: " + player.getTotal());
+		System.out.println("Dealer:              " + dealer.getCardStringHidden());
+		System.out.println("Player:              " + player.getCardString());
+		System.out.println("Dealer total:        ?");
+		if(player.hasSplit()) {
+			System.out.println("Player first total:  " + player.getTotal());
+			System.out.println("Player second total: " + player.getTotalSplit());
+		}
+		else {
+			System.out.println("Player total:        " + player.getTotal());
+
+		}
 		System.out.println();
 	}
 	
+	//prints cards but only dealer's first card is visible
 	public void printGameDataDealerVisible() {
-		System.out.println("Dealer: " + dealer.getCardStringVisible());
-		System.out.println("Player: " + player.getCardString());
-		System.out.println("Dealer total: " + dealer.getTotal());
-		System.out.println("Player total: " + player.getTotal());
+		System.out.println("Dealer:              " + dealer.getCardStringVisible());
+		System.out.println("Player:              " + player.getCardString());
+		
+		if(dealer.hasSplit()) {
+			System.out.println("Dealer first total:  " + dealer.getTotal());
+			System.out.println("Dealer second total: " + dealer.getTotalSplit());
+		}
+		else {
+			System.out.println("Dealer total:        " + dealer.getTotal());
+
+		}
+		if(player.hasSplit()) {
+			System.out.println("Player first total:  " + player.getTotal());
+			System.out.println("Player second total: " + player.getTotalSplit());
+		}
+		else {
+			System.out.println("Player total:        " + player.getTotal());
+
+		}
 		System.out.println();
 	}
 	
-	private void endGame() {
+	//clears player and dealer cards, used for testing
+	public void endGame() {
 		player.clearCards();
 		dealer.clearCards();
+	}
+	
+	//determines
+	public String determineWinner(Player player, Dealer dealer) {
+		Hand bestPlayerHand = player.getBestHand();
+		Hand bestDealerHand = dealer.getBestHand();
+		if(bestPlayerHand.getTotal() > bestDealerHand.getTotal()) {
+			return "Player wins!";
+		}
+		else {
+			return "Dealer wins!";
+		}
 	}
 }
