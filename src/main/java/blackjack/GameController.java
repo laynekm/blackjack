@@ -2,7 +2,9 @@ package blackjack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class GameController {
@@ -220,9 +222,40 @@ public class GameController {
 	public boolean isValidFile(String fileName) {
 		File file = new File(fileName);
 		if(file.exists()) {
-			//TODO: check if formattiing is valid as well
+			
+			Deck deck = new Deck();
+			String[] deckArray = deck.toArray();
+			String[] inputArray = convertFileToArray(fileName);
+			ArrayList<String> deckList = new ArrayList<String>(Arrays.asList(deckArray));
+			ArrayList<String> inputList = new ArrayList<String>(Arrays.asList(inputArray));
+			
+			//ensures values can only get a valid card, S, H, or D
+			for(int i = 0; i < inputList.size(); i++) {
+				String elem = inputList.get(i);
+				if(!elem.equals("S") && !elem.equals("H") && !elem.equals("D") && !deckList.contains(elem)) {
+					System.out.println("Invalid file. Contains invalid strings.");
+					return false;
+				}
+			}
+			
+			//ensures values card values are not duplicated
+			for(int i = 0; i < inputList.size(); i++) {
+				String elem = inputList.get(i);
+				if(!elem.equals("S") && !elem.equals("H") && !elem.equals("D")) {
+					if(deckList.contains(elem)) {
+						deckList.remove(elem);
+					}
+					else {
+						System.out.println("Invalid file. File contains duplicate strings.");
+						return false;
+					}
+				}
+			}
+			
 			return true;
 		}
+		
+		System.out.println("Invalid file. File does not exist.");
 		return false;
 	}
 	
@@ -274,6 +307,8 @@ public class GameController {
 	
 	public String promptFileName() {
 		String input = "";
+		System.out.print("Enter file name: ");
+		input = scanner.nextLine();
 		while(!isValidFile(input)) {
 			System.out.print("Enter file name: ");
 			input = scanner.nextLine();
