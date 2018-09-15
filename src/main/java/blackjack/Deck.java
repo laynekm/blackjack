@@ -46,11 +46,11 @@ public class Deck {
 		return cards;
 	}
 	
-	public void printCards() {
+	public String[] toArray() {
+		String[] array = new String[52];
 		for(int i = 0; i < cards.length; i++) {
-			System.out.print(cards[i].getRank());
-			System.out.print(cards[i].getSuit() + " ");
+			array[i] = cards[i].toString();
 		}
-		System.out.println();
+		return array;
 	}
 }
