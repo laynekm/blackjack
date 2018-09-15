@@ -9,11 +9,6 @@ import java.util.Scanner;
 
 public class GameControllerTest extends TestCase{
 	
-	public void startGame() {
-		GameController game = new GameController();
-		assertTrue(game.startGame().equals("Dealer wins!") || game.startGame().equals("Player wins!"));
-	}
-	
 	public void testIsValidInputType() {
 		GameController game = new GameController();
 		assertTrue(game.isValidInputType("C"));
