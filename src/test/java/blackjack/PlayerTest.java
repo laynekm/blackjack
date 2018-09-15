@@ -124,5 +124,10 @@ public class PlayerTest extends TestCase{
 		player3.hitSplit(card8);
 		player3.hitSplit(card9);
 		assertEquals(null, player3.getBestHand());
+		
+		//test with no splitting
+		Player player4 = new Player();
+		player4.hit(card1);
+		assertEquals(5, player4.getBestHand().getTotal());
 	}
 }

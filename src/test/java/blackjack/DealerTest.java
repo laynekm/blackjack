@@ -186,5 +186,10 @@ public class DealerTest extends TestCase{
 		dealer3.hitSplit(card8);
 		dealer3.hitSplit(card9);
 		assertEquals(null, dealer3.getBestHand());
+		
+		//test with no splitting
+		Dealer dealer4 = new Dealer();
+		dealer4.hit(card1);
+		assertEquals(5, dealer4.getBestHand().getTotal());
 	}
 }
