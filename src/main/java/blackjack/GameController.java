@@ -98,7 +98,6 @@ public class GameController {
 		
 		//if player has split, now hits or stands on split
 		if(player.hasSplit()) {
-			
 			//second card automatically gets dealt to second hand
 			System.out.println("Player hits on second hand:");
 			Card card5 = new Card(moves[x++]);
