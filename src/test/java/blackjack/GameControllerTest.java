@@ -43,7 +43,13 @@ public class GameControllerTest extends TestCase{
 		assertTrue(game.isValidFile(realFileName));
 		assertFalse(game.isValidFile(fakeFileName));
 		
-		//TODO: test file input is of valid format
+		//test case where input has incorrect suit/rank
+		String invalidCardsFileName = "src/main/resources/invalidInput1.txt";
+		assertFalse(game.isValidFile(invalidCardsFileName));
+		
+		//test case where duplicate cards
+		String duplicateCardsFileName = "src/main/resources/invalidInput2.txt";
+		assertFalse(game.isValidFile(duplicateCardsFileName));
 	}
 	
 	public void testConvertFileToArray() {
