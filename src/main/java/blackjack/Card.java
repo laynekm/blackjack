@@ -17,6 +17,6 @@ public class Card {
 	public String getRank() { return rank; }
 	public String getSuit() { return suit; }
 	public String toString() {
-		return rank + suit;
+		return suit + rank;
 	}
 }
