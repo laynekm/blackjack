@@ -47,4 +47,11 @@ public class DeckTest extends TestCase{
 		//test that new deck is one smaller than original
 		assertEquals(newCards.length, cards.length - 1);
 	}
+	
+	public void testToArray() {
+		Deck deck = new Deck();
+		deck.shuffle();
+		String[] string = deck.toArray();
+		assertEquals(52, string.length);
+	}
 }
