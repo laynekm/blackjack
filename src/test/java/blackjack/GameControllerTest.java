@@ -13,7 +13,6 @@ public class GameControllerTest extends TestCase{
 		GameController game = new GameController();
 		assertTrue(game.isValidInputType("C"));
 		assertTrue(game.isValidInputType("F"));
-		assertTrue(game.isValidInputType("G"));
 		assertFalse(game.isValidInputType("X"));
 		assertFalse(game.isValidInputType(""));
 	}
@@ -49,16 +48,16 @@ public class GameControllerTest extends TestCase{
 		//tests file exists
 		String realFileName = "src/main/resources/playerWins.txt";
 		String fakeFileName = "src/main/resources/fakeFile.txt";
-		assertTrue(game.isValidFile(realFileName));
-		assertFalse(game.isValidFile(fakeFileName));
+		assertTrue(game.isValidFile(realFileName).equals("Y"));
+		assertFalse(game.isValidFile(fakeFileName).equals("Y"));
 		
 		//test case where input has incorrect suit/rank
 		String invalidCardsFileName = "src/main/resources/invalidInput1.txt";
-		assertFalse(game.isValidFile(invalidCardsFileName));
+		assertFalse(game.isValidFile(invalidCardsFileName).equals("Y"));
 		
 		//test case where duplicate cards
 		String duplicateCardsFileName = "src/main/resources/invalidInput2.txt";
-		assertFalse(game.isValidFile(duplicateCardsFileName));
+		assertFalse(game.isValidFile(duplicateCardsFileName).equals("Y"));
 	}
 	
 	public void testConvertFileToArray() {
