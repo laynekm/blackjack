@@ -46,14 +46,6 @@ public class HandTest extends TestCase{
 	}
 
 	public void testGetTotal() {
-		//ace counts as 11
-		Hand testerHand1 = new Hand();
-		Card card1 = new Card("D", "10");
-		Card card2 = new Card("S", "A");
-		testerHand1.hit(card1);
-		testerHand1.hit(card2);
-		assertEquals(21, testerHand1.getTotal());
-		
 		//ace counts as 1
 		Hand testerHand2 = new Hand();
 		Card card3 = new Card("C", "2");
@@ -64,6 +56,22 @@ public class HandTest extends TestCase{
 		testerHand2.hit(card5);
 		assertEquals(13, testerHand2.getTotal());
 		
+		//ace counts as 11
+		Hand testerHand1 = new Hand();
+		Card card1 = new Card("D", "10");
+		Card card2 = new Card("S", "A");
+		testerHand1.hit(card1);
+		testerHand1.hit(card2);
+		assertEquals(21, testerHand1.getTotal());
+		
+		//aces count as 11 and 1
+		Hand testerHand4 = new Hand();
+		Card card9 = new Card("SA");
+		Card card10 = new Card("CA");
+		testerHand4.hit(card9);
+		testerHand4.hit(card10);
+		assertEquals(12, testerHand4.getTotal());
+	
 		//ace counts as 11 then 1
 		Hand testerHand3 = new Hand();
 		Card card6 = new Card("C8");
@@ -74,14 +82,6 @@ public class HandTest extends TestCase{
 		Card card8 = new Card("S5");
 		testerHand3.hit(card8);
 		assertEquals(14, testerHand3.getTotal());
-		
-		//aces count as 11 and 1
-		Hand testerHand4 = new Hand();
-		Card card9 = new Card("SA");
-		Card card10 = new Card("CA");
-		testerHand4.hit(card9);
-		testerHand4.hit(card10);
-		assertEquals(12, testerHand4.getTotal());
 		
 		//aces both count as 1
 		Hand testerHand5 = new Hand();

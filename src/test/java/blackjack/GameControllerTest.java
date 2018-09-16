@@ -13,6 +13,7 @@ public class GameControllerTest extends TestCase{
 		GameController game = new GameController();
 		assertTrue(game.isValidInputType("C"));
 		assertTrue(game.isValidInputType("F"));
+		assertTrue(game.isValidInputType("UI"));
 		assertFalse(game.isValidInputType("X"));
 		assertFalse(game.isValidInputType(""));
 	}
@@ -36,10 +37,10 @@ public class GameControllerTest extends TestCase{
 	
 	public void testIsValidPlayAgain() {
 		GameController game = new GameController();
-		assertTrue(game.isValidMoveWithSplit("Y"));
-		assertTrue(game.isValidMoveWithSplit("H"));
-		assertFalse(game.isValidMoveWithSplit("X"));
-		assertFalse(game.isValidMoveWithSplit(""));
+		assertTrue(game.isValidPlayAgain("Y"));
+		assertTrue(game.isValidPlayAgain("N"));
+		assertFalse(game.isValidPlayAgain("X"));
+		assertFalse(game.isValidPlayAgain(""));
 	}
 	
 	public void testIsValidFile() {
@@ -73,7 +74,7 @@ public class GameControllerTest extends TestCase{
 		
 	}
 	
-	public void testPlayGame() {
+	public void testPlayGameFileInput() {
 		GameController game = new GameController();
 	
 		//test with file input
@@ -120,7 +121,10 @@ public class GameControllerTest extends TestCase{
 		assertTrue(game.playGame(fileArray10, "F").equals("Player wins!"));
 		game.endGame();
 		
-		//test with console (note: requires user input)
+	}
+	
+	public void testPlayGameConsoleInput() {		
+		GameController game = new GameController();
 		Deck deck = new Deck();
 		deck.shuffle();
 		String[] deckArray = deck.toArray();
