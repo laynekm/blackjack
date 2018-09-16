@@ -198,7 +198,7 @@ public class GameController {
 	//*****************
 	//user input validation methods
 	public boolean isValidInputType(String inputType) {
-		if(inputType.equals("C") || inputType.equals("F")) {
+		if(inputType.equals("C") || inputType.equals("F") || inputType.equals("G")) {
 			return true;
 		}
 		return false;
@@ -306,7 +306,7 @@ public class GameController {
 	public String promptInputType() {
 		String input = "";
 		while(!isValidInputType(input)) {
-			System.out.print("Console (C) or file (F) input: ");
+			System.out.print("Console (C), file (F), or GUI (G) input: ");
 			input = scanner.nextLine();
 		}
 		return input;

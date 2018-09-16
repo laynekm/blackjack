@@ -1,5 +1,7 @@
 package blackjack;
 
+import javafx.application.Application;
+
 public class Main {
 	public static void main(String[] args)
 	{
@@ -16,10 +18,13 @@ public class Main {
 				winner = game.playGame(deck.toArray(), "C");
 			}
 			
-			else{
+			else if(inputType.equals("F")){
 				String fileName = game.promptFileName();
 				String[] gameMoves = game.convertFileToArray(fileName);
 				winner = game.playGame(gameMoves, "F");
+			}
+			else {
+				Application.launch(GUI.class, args);
 			}
 			
 			System.out.println(winner);
