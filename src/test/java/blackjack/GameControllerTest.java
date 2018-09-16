@@ -13,7 +13,7 @@ public class GameControllerTest extends TestCase{
 		GameController game = new GameController();
 		assertTrue(game.isValidInputType("C"));
 		assertTrue(game.isValidInputType("F"));
-		assertTrue(game.isValidInputType("UI"));
+		assertTrue(game.isValidInputType("G"));
 		assertFalse(game.isValidInputType("X"));
 		assertFalse(game.isValidInputType(""));
 	}
