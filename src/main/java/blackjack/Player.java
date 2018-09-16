@@ -37,10 +37,10 @@ public class Player {
 	}
 	
 	public Hand getBestHand() {
-		if(hand.getTotal() <= 21 && (hand.getTotal() > splitHand.getTotal() || splitHand.getTotal() > 21)) {
+		if(hand.getTotal() <= 21 && (hand.getTotal() >= splitHand.getTotal() || splitHand.getTotal() > 21)) {
 			return hand;
 		}
-		if(splitHand.getTotal() <= 21 && (splitHand.getTotal() > hand.getTotal() || hand.getTotal() > 21)) {
+		if(splitHand.getTotal() <= 21 && (splitHand.getTotal() >= hand.getTotal() || hand.getTotal() > 21)) {
 			return splitHand;
 		}
 		return null;
