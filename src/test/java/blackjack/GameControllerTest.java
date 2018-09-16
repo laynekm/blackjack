@@ -78,6 +78,7 @@ public class GameControllerTest extends TestCase{
 		String fileName7 = "src/main/resources/playerHasBlackjack.txt";
 		String fileName8 = "src/main/resources/playerHitsRepeatedly.txt";
 		String fileName9 = "src/main/resources/dealerHitsRepeatedly.txt";
+		String fileName10 = "src/main/resources/playerStands.txt";
 
 		String[] fileArray1 = game.convertFileToArray(fileName1);
 		String[] fileArray2 = game.convertFileToArray(fileName2);
@@ -88,6 +89,7 @@ public class GameControllerTest extends TestCase{
 		String[] fileArray7 = game.convertFileToArray(fileName7);
 		String[] fileArray8 = game.convertFileToArray(fileName8);
 		String[] fileArray9 = game.convertFileToArray(fileName9);
+		String[] fileArray10 = game.convertFileToArray(fileName10);
 		
 		assertTrue(game.playGame(fileArray1, "F").equals("Dealer wins!"));
 		game.endGame();
@@ -106,6 +108,8 @@ public class GameControllerTest extends TestCase{
 		assertTrue(game.playGame(fileArray8, "F").equals("Dealer wins!"));
 		game.endGame();
 		assertTrue(game.playGame(fileArray9, "F").equals("Dealer wins!"));
+		game.endGame();
+		assertTrue(game.playGame(fileArray10, "F").equals("Player wins!"));
 		game.endGame();
 		
 		//test with console (note: requires user input)

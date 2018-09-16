@@ -280,7 +280,7 @@ public class GameController {
 		dealer.clearCards();
 	}
 	
-	//determines
+	//determines winner
 	public String determineWinner(Player player, Dealer dealer) {
 		Hand bestPlayerHand = player.getBestHand();
 		Hand bestDealerHand = dealer.getBestHand();
@@ -308,10 +308,10 @@ public class GameController {
 	public String promptFileName() {
 		String input = "";
 		System.out.print("Enter file name: ");
-		input = scanner.nextLine();
+		input = "src/main/resources/" + scanner.nextLine();
 		while(!isValidFile(input)) {
 			System.out.print("Enter file name: ");
-			input = scanner.nextLine();
+			input = "src/main/resources/" + scanner.nextLine();
 		}
 		return input;
 	}
