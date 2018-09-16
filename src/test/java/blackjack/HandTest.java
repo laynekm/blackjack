@@ -85,9 +85,9 @@ public class HandTest extends TestCase{
 		
 		//aces both count as 1
 		Hand testerHand5 = new Hand();
+		testerHand5.hit(card4);
 		testerHand5.hit(card9);
 		testerHand5.hit(card10);
-		testerHand5.hit(card4);
 		assertEquals(12, testerHand5.getTotal());
 		
 		//test J, Q, K all count as 10
@@ -96,11 +96,11 @@ public class HandTest extends TestCase{
 		Card card12 = new Card("SQ");
 		Card card13 = new Card("SK");
 		testerHand6.hit(card11);
-		assertEquals(10, testerHand5.getTotal());
+		assertEquals(10, testerHand6.getTotal());
 		testerHand6.hit(card12);
-		assertEquals(20, testerHand5.getTotal());
+		assertEquals(20, testerHand6.getTotal());
 		testerHand6.hit(card13);
-		assertEquals(30, testerHand5.getTotal());
+		assertEquals(30, testerHand6.getTotal());
 
 		//test case where Hand empty
 		Hand testerHand7 = new Hand();
