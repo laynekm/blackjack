@@ -75,6 +75,9 @@ public class GameControllerTest extends TestCase{
 		String fileName4 = "src/main/resources/playerSplits.txt";
 		String fileName5 = "src/main/resources/dealerSplits.txt";
 		String fileName6 = "src/main/resources/playerBusts.txt";
+		String fileName7 = "src/main/resources/playerHasBlackjack.txt";
+		String fileName8 = "src/main/resources/playerHitsRepeatedly.txt";
+		String fileName9 = "src/main/resources/dealerHitsRepeatedly.txt";
 
 		String[] fileArray1 = game.convertFileToArray(fileName1);
 		String[] fileArray2 = game.convertFileToArray(fileName2);
@@ -82,6 +85,9 @@ public class GameControllerTest extends TestCase{
 		String[] fileArray4 = game.convertFileToArray(fileName4);
 		String[] fileArray5 = game.convertFileToArray(fileName5);
 		String[] fileArray6 = game.convertFileToArray(fileName6);
+		String[] fileArray7 = game.convertFileToArray(fileName7);
+		String[] fileArray8 = game.convertFileToArray(fileName8);
+		String[] fileArray9 = game.convertFileToArray(fileName9);
 		
 		assertTrue(game.playGame(fileArray1, "F").equals("Dealer wins!"));
 		game.endGame();
@@ -95,6 +101,12 @@ public class GameControllerTest extends TestCase{
 		game.endGame();
 		assertTrue(game.playGame(fileArray6, "F").equals("Dealer wins!"));
 		game.endGame();
+		assertTrue(game.playGame(fileArray7, "F").equals("Player wins!"));
+		game.endGame();
+		assertTrue(game.playGame(fileArray8, "F").equals("Dealer wins!"));
+		game.endGame();
+		assertTrue(game.playGame(fileArray9, "F").equals("Dealer wins!"));
+		game.endGame();
 		
 		//test with console (note: requires user input)
 		Deck deck = new Deck();
@@ -104,9 +116,10 @@ public class GameControllerTest extends TestCase{
 		assertTrue(gameResult.equals("Player wins!") || gameResult.equals("Dealer wins!"));
 	}
 	
-	public void determineWinner() {
+	public void testDetermineWinner() {
 		GameController game = new GameController();
 		
+		//test case where dealer wins
 		Player player1 = new Player();
 		Dealer dealer1 = new Dealer();
 		Card card1 = new Card("SK");
@@ -121,7 +134,15 @@ public class GameControllerTest extends TestCase{
 		dealer1.hit(card4);
 		dealer1.hit(card5);
 		dealer1.hit(card6);
-		
 		assertEquals("Dealer wins!", game.determineWinner(player1, dealer1));
+		game.endGame();
+		
+		//test case where player wins
+		player1.hit(card1);
+		player1.hit(card6);
+		dealer1.hit(card2);
+		dealer1.hit(card3);
+		dealer1.hit(card4);
+		assertEquals("Player wins!", game.determineWinner(player1, dealer1));
 	}
 }
