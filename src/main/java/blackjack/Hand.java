@@ -56,13 +56,14 @@ public class Hand {
 	//returns total, accounting for whether aces are worth 1 or 11
 	public int getTotal() {
 		int total = 0;
+		int aceCount = 0;
 		
 		//first determine total without aces
 		for(int i = 0; i < cards.size(); i++) {
 			Card card = cards.get(i);
 			
 			if(card.getRank().equals("A")) {
-				continue;
+				aceCount++;
 			}
 			else if(card.getRank().equals("J") || card.getRank().equals("Q") || card.getRank().equals("K")) {
 				total += 10;
@@ -72,14 +73,18 @@ public class Hand {
 			}
 		}
 		
-		//use this pre-total to determine whether ace should be 1 or 11
+		//use pre-total to determine value of aces
+		int aceMax = 0;
 		for(int i = 0; i < cards.size(); i++) {
 			Card card = cards.get(i);
-			if(card.getRank().equals("A") && total <= 10) {
-				total += 11;
-			}
-			else if(card.getRank().equals("A") && total > 10) {
+			aceMax = aceCount * 11;
+			if(card.getRank().equals("A") && total + aceMax > 21) {
 				total += 1;
+				aceCount--;
+			}
+			else if(card.getRank().equals("A") && total + aceMax <= 21) {
+				total += 11;
+				aceCount--;
 			}
 		}
 		
