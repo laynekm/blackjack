@@ -68,17 +68,20 @@ public class GameControllerTest extends TestCase{
 	public void testPlayGame() {
 		GameController game = new GameController();
 	
+		//test with file input
 		String fileName1 = "src/main/resources/bothHaveBlackjack.txt";
 		String fileName2 = "src/main/resources/dealerBusts.txt";
 		String fileName3 = "src/main/resources/playerWins.txt";
 		String fileName4 = "src/main/resources/playerSplits.txt";
 		String fileName5 = "src/main/resources/dealerSplits.txt";
+		String fileName6 = "src/main/resources/playerBusts.txt";
 
 		String[] fileArray1 = game.convertFileToArray(fileName1);
 		String[] fileArray2 = game.convertFileToArray(fileName2);
 		String[] fileArray3 = game.convertFileToArray(fileName3);
 		String[] fileArray4 = game.convertFileToArray(fileName4);
 		String[] fileArray5 = game.convertFileToArray(fileName5);
+		String[] fileArray6 = game.convertFileToArray(fileName6);
 		
 		assertTrue(game.playGame(fileArray1, "F").equals("Dealer wins!"));
 		game.endGame();
@@ -90,6 +93,15 @@ public class GameControllerTest extends TestCase{
 		game.endGame();
 		assertTrue(game.playGame(fileArray5, "F").equals("Player wins!"));
 		game.endGame();
+		assertTrue(game.playGame(fileArray6, "F").equals("Dealer wins!"));
+		game.endGame();
+		
+		//test with console (note: requires user input)
+		Deck deck = new Deck();
+		deck.shuffle();
+		String[] deckArray = deck.toArray();
+		String gameResult = game.playGame(deckArray, "C");
+		assertTrue(gameResult.equals("Player wins!") || gameResult.equals("Dealer wins!"));
 	}
 	
 	public void determineWinner() {

@@ -46,6 +46,7 @@ public class HandTest extends TestCase{
 	}
 
 	public void testGetTotal() {
+		//ace counts as 11
 		Hand testerHand1 = new Hand();
 		Card card1 = new Card("D", "10");
 		Card card2 = new Card("S", "A");
@@ -53,6 +54,7 @@ public class HandTest extends TestCase{
 		testerHand1.hit(card2);
 		assertEquals(21, testerHand1.getTotal());
 		
+		//ace counts as 1
 		Hand testerHand2 = new Hand();
 		Card card3 = new Card("C", "2");
 		Card card4 = new Card("D", "10");
@@ -62,16 +64,47 @@ public class HandTest extends TestCase{
 		testerHand2.hit(card5);
 		assertEquals(13, testerHand2.getTotal());
 		
+		//ace counts as 11 then 1
 		Hand testerHand3 = new Hand();
-		Card card6 = new Card("CQ");
-		Card card7 = new Card("SK");
+		Card card6 = new Card("C8");
+		Card card7 = new Card("SA");
 		testerHand3.hit(card6);
 		testerHand3.hit(card7);
-		assertEquals(20, testerHand3.getTotal());
+		assertEquals(19, testerHand3.getTotal());
+		Card card8 = new Card("S5");
+		testerHand3.hit(card8);
+		assertEquals(14, testerHand3.getTotal());
 		
-		//test case where Hand empty
+		//aces count as 11 and 1
 		Hand testerHand4 = new Hand();
-		assertEquals(0, testerHand4.getTotal());
+		Card card9 = new Card("SA");
+		Card card10 = new Card("CA");
+		testerHand4.hit(card9);
+		testerHand4.hit(card10);
+		assertEquals(12, testerHand4.getTotal());
+		
+		//aces both count as 1
+		Hand testerHand5 = new Hand();
+		testerHand5.hit(card9);
+		testerHand5.hit(card10);
+		testerHand5.hit(card4);
+		assertEquals(12, testerHand5.getTotal());
+		
+		//test J, Q, K all count as 10
+		Hand testerHand6 = new Hand();
+		Card card11 = new Card("SJ");
+		Card card12 = new Card("SQ");
+		Card card13 = new Card("SK");
+		testerHand6.hit(card11);
+		assertEquals(10, testerHand5.getTotal());
+		testerHand6.hit(card12);
+		assertEquals(20, testerHand5.getTotal());
+		testerHand6.hit(card13);
+		assertEquals(30, testerHand5.getTotal());
+
+		//test case where Hand empty
+		Hand testerHand7 = new Hand();
+		assertEquals(0, testerHand7.getTotal());
 	}
 	
 	public void testHasSoft17() {
