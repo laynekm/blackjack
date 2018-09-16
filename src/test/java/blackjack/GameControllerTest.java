@@ -34,6 +34,14 @@ public class GameControllerTest extends TestCase{
 		assertFalse(game.isValidMoveWithSplit(""));
 	}
 	
+	public void testIsValidPlayAgain() {
+		GameController game = new GameController();
+		assertTrue(game.isValidMoveWithSplit("Y"));
+		assertTrue(game.isValidMoveWithSplit("H"));
+		assertFalse(game.isValidMoveWithSplit("X"));
+		assertFalse(game.isValidMoveWithSplit(""));
+	}
+	
 	public void testIsValidFile() {
 		GameController game = new GameController();
 		
