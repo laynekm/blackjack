@@ -19,6 +19,8 @@ public class Player {
 	public boolean hitSplit(Card card) { 	return splitHand.hit(card); }
 	public int getTotalSplit() {			return splitHand.getTotal(); }
 	public void clearCards() {				hand.clear(); splitHand.clear(); }
+	public Hand getHand() {					return hand; }
+	public Hand getSplitHand() {			return splitHand; }
 	
 	//splits user's hand (ie. pops from hand and adds to splitHand), retruns false if invalid split
 	public boolean split() {

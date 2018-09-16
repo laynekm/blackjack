@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import javafx.application.Application;
+
 public class GameController {
 	private static Scanner scanner = new Scanner(System.in);
 	
@@ -15,7 +17,7 @@ public class GameController {
 	
 	public GameController() {
 		 player = new Player();
-		 dealer = new Dealer();
+		 dealer = new Dealer();	
 	}
 	
 	//************************
@@ -198,7 +200,7 @@ public class GameController {
 	//*****************
 	//user input validation methods
 	public boolean isValidInputType(String inputType) {
-		if(inputType.equals("C") || inputType.equals("F") || inputType.equals("G")) {
+		if(inputType.equals("C") || inputType.equals("F")) {
 			return true;
 		}
 		return false;
@@ -226,7 +228,7 @@ public class GameController {
 	}
 
 	//verifies whether a file exists and is of valid format
-	public boolean isValidFile(String fileName) {
+	public String isValidFile(String fileName) {
 		File file = new File(fileName);
 		if(file.exists()) {
 			
@@ -241,7 +243,7 @@ public class GameController {
 				String elem = inputList.get(i);
 				if(!elem.equals("S") && !elem.equals("H") && !elem.equals("D") && !deckList.contains(elem)) {
 					System.out.println("Invalid file. Contains invalid strings.");
-					return false;
+					return "Invalid file. Contains invalid strings.";
 				}
 			}
 			
@@ -254,16 +256,16 @@ public class GameController {
 					}
 					else {
 						System.out.println("Invalid file. File contains duplicate strings.");
-						return false;
+						return "Invalid file. File contains duplicate strings.";
 					}
 				}
 			}
 			
-			return true;
+			return "Y";
 		}
 		
 		System.out.println("Invalid file. File does not exist.");
-		return false;
+		return "Invalid file. File does not exist.";
 	}
 	
 	//reads file and puts data into array of strings
@@ -306,7 +308,7 @@ public class GameController {
 	public String promptInputType() {
 		String input = "";
 		while(!isValidInputType(input)) {
-			System.out.print("Console (C), file (F), or GUI (G) input: ");
+			System.out.print("Console (C) or file (F) input: ");
 			input = scanner.nextLine();
 		}
 		return input;
@@ -316,7 +318,7 @@ public class GameController {
 		String input = "";
 		System.out.print("Enter file name: ");
 		input = "src/main/resources/" + scanner.nextLine();
-		while(!isValidFile(input)) {
+		while(!isValidFile(input).equals("Y")) {
 			System.out.print("Enter file name: ");
 			input = "src/main/resources/" + scanner.nextLine();
 		}

@@ -21,6 +21,8 @@ public class Dealer {
 	public int getTotalSplit() {			return splitHand.getTotal(); }
 	public boolean hasSoft17Split() {		return splitHand.hasSoft17(); }
 	public void clearCards() {				hand.clear(); splitHand.clear(); }
+	public Hand getHand() {					return hand; }
+	public Hand getSplitHand() {			return splitHand; }
 	
 	//splits user's hand (ie. pops from hand and adds to splitHand)
 	public boolean split() {
