@@ -217,6 +217,13 @@ public class GameController {
 		}
 		return false;
 	}
+	
+	public boolean isValidPlayAgain(String input) {
+		if(input.equals("Y") || input.equals("N")) {
+			return true;
+		}
+		return false;
+	}
 
 	//verifies whether a file exists and is of valid format
 	public boolean isValidFile(String fileName) {
@@ -329,6 +336,15 @@ public class GameController {
 		String input = "";
 		while(!isValidMoveWithSplit(input)) {
 			System.out.print("Hit (H), Stand (S), or Split (D): ");
+			input = scanner.nextLine();
+		}
+		return input;
+	}
+	
+	public String promptPlayAgain() {
+		String input = "";
+		while(!isValidPlayAgain(input)) {
+			System.out.print("Play again (Y/N): ");
 			input = scanner.nextLine();
 		}
 		return input;
