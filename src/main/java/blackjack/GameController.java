@@ -44,20 +44,15 @@ public class GameController {
 		dealer.hit(card2);
 		dealer.hit(card3);
 		
-		System.out.println("\nCards dealt:");
-		printGameDataDealerHidden();
+		printGameDataDealerHidden("Cards dealt: ");
 		
 		//game is over if dealer or player get a blackjack (ie. 21)
 		if(dealer.hasBlackjack()) {
-			System.out.println("Dealer's cards revealed:");
-			printGameDataDealerVisible();
-			System.out.println("Dealer got blackjack!");
+			printGameDataDealerVisible("Dealer got a blackjack!");
 			return "Dealer wins!"; 
 		}
 		if(player.hasBlackjack()) { 
-			System.out.println("Dealer's cards revealed:");
-			printGameDataDealerVisible();
-			System.out.println("Player got blackjack!");
+			printGameDataDealerVisible("Player got a blackjack!");
 			return "Player wins!"; 
 		}
 		
@@ -67,62 +62,62 @@ public class GameController {
 		else { 											playerMove = moves[x]; }
 		if(player.canSplit() && playerMove.equals("D")) {
 			x++;
-			System.out.println("Player splits:");
 			player.split();
 			System.out.println(moves[x].toString());
 			Card card4 = new Card(moves[x++]);
 			player.hit(card4);
-			printGameDataDealerHidden();
+			printGameDataDealerHidden("Player splits: ");
 		}
 		
 		//player hits or stands
 		if(!consoleInput) { playerMove = moves[x++]; }
 		while(playerMove.equals("H")) {
 			playerMove = "";
-			System.out.println("Player hits:");
 			Card card = new Card(moves[x++]);
 			if(!player.hit(card)) {
-				printGameDataDealerHidden();
 				if(player.hasSplit()) {
-					System.out.println("Player went bust on first hand! Total: " + player.getTotal());
+					printGameDataDealerHidden("Player hit and went bust on first hand! Total: " + player.getTotal());
 				}
 				else {
-					System.out.println("Player went bust! Total: " + player.getTotal());
+					printGameDataDealerHidden("Player hit and went bust! Total: " + player.getTotal());
 					return "Dealer wins!"; 
 				}
 			}
-			printGameDataDealerHidden();
+			else {
+				printGameDataDealerHidden("Player hits:");
+			}
+			//printGameDataDealerHidden();
 			if(consoleInput) { 	playerMove = promptMove(); }
 			else { 				playerMove = moves[x++]; }
 		}
 		
 		if(playerMove.equals("S")) {
-			System.out.println("\nPlayer stands.\n");
+			printGameDataDealerHidden("Player stands.");
 		}
 		
 		//if player has split, now hits or stands on split
 		if(player.hasSplit()) {
 			//second card automatically gets dealt to second hand
-			System.out.println("Player hits on second hand:");
 			Card card5 = new Card(moves[x++]);
 			if(!player.hitSplit(card5)) {
-				printGameDataDealerHidden();
-				System.out.println("Player went bust on second hand! Total: " + player.getTotal());
+				printGameDataDealerHidden("Player went bust on second hand! Total: " + player.getTotal());
 			}
-			printGameDataDealerHidden();
+			else {
+				printGameDataDealerHidden("Player hits on second hand: ");
+			}
 			
 			//decides whether user hits on second hand
 			if(consoleInput) { 	playerMove = promptMove(); }
 			else { 				playerMove = moves[x++]; }
 			while(playerMove.equals("H")) {
 				playerMove = "";
-				System.out.println("Player hits on second hand:");
 				Card card6 = new Card(moves[x++]);
 				if(!player.hitSplit(card6)) {
-					printGameDataDealerVisible();
-					System.out.println("Player went bust on second hand! Total: " + player.getTotal());
+					printGameDataDealerVisible("Player went bust on second hand! Total: " + player.getTotal());
 				}
-				printGameDataDealerHidden();
+				else {
+					printGameDataDealerHidden("Player hits on second hand: ");
+				}
 			}
 			
 			if(player.getTotal() > 21 && player.getTotalSplit() > 21) {
@@ -130,59 +125,58 @@ public class GameController {
 				return "Dealer wins!"; 
 			}
 			
-			System.out.println("Player stands.\n");
+			printGameDataDealerHidden("Player stands.");
+
 		}
-		
-		System.out.println("Dealer's card revealed:");
-		printGameDataDealerVisible();
+
+		printGameDataDealerVisible("Dealer's cards revealed:");
 		
 		//split dealer hand
 		if(dealer.canSplit() && dealer.determineHit().equals("H")) {
-			System.out.println("Dealer splits:");
 			dealer.split();
 			Card card4 = new Card(moves[x++]);
 			dealer.hit(card4);
-			printGameDataDealerVisible();
+			printGameDataDealerVisible("Dealer splits:");
 		}
 		
 		while(dealer.determineHit().equals("H")) {
-			System.out.println("Dealer hits:");
 			Card card = new Card(moves[x++]);
 			if(!dealer.hit(card)) {
-				printGameDataDealerVisible();
 				if(dealer.hasSplit()) {
-					System.out.println("Dealer went bust on first hand! Total: " + dealer.getTotal());
+					printGameDataDealerVisible("Dealer went bust on first hand! Total: " + dealer.getTotal());
 				}
 				else {
-					System.out.println("Dealer went bust! Total: " + dealer.getTotal());
+					printGameDataDealerVisible("Dealer went bust! Total: " + dealer.getTotal());
 					return "Player wins!"; 
 				}
 			}
-			printGameDataDealerVisible();
+			else {
+				printGameDataDealerVisible("Dealer hits:");
+			}
 		}
 		
-		System.out.println("Dealer stands.\n");
+		printGameDataDealerVisible("Dealer stands.");
 
 		//if dealer has split, now hits or stands on split
 		if(dealer.hasSplit()) {
 			
 			//second hand gets card delt automatically
-			System.out.println("Dealer hits on second hand:");
 			Card card6 = new Card(moves[x++]);
 			if(!dealer.hitSplit(card6)) {
-				printGameDataDealerVisible();
-				System.out.println("Dealer went bust on second hand! Total: " + dealer.getTotal());
+				printGameDataDealerVisible("Dealer went bust on second hand! Total: " + dealer.getTotal());
 			}
-			printGameDataDealerVisible();
+			else {
+				printGameDataDealerVisible("Dealer hits on second hand:");
+			}
 			
 			while(dealer.determineHitSplit().equals("H")) {
-				System.out.println("Dealer hits on second hand:");
 				Card card = new Card(moves[x++]);
 				if(!dealer.hitSplit(card)) {
-					printGameDataDealerVisible();
-					System.out.println("Dealer went bust on second hand! Total: " + dealer.getTotal());
+					printGameDataDealerVisible("Dealer went bust on second hand! Total: " + dealer.getTotal());
 				}
-				printGameDataDealerVisible();
+				else {
+					printGameDataDealerVisible("Dealer hits on second hand:");
+				}
 			}
 			
 			if(dealer.getTotal() > 21 && dealer.getTotalSplit() > 21) {
@@ -353,42 +347,51 @@ public class GameController {
 	}
 	
 	//prints all cards
-	public void printGameDataDealerHidden() {
-		System.out.println("Dealer:              " + dealer.getCardStringHidden());
-		System.out.println("Player:              " + player.getCardString());
-		System.out.println("Dealer total:        ?");
-		if(player.hasSplit()) {
-			System.out.println("Player first total:  " + player.getTotal());
-			System.out.println("Player second total: " + player.getTotalSplit());
-		}
-		else {
-			System.out.println("Player total:        " + player.getTotal());
+	public void printGameDataDealerHidden(String message) {
+		System.out.println("\n" + message);
+		if(!message.contains("stands")) {
+			System.out.println("Dealer:              " + dealer.getCardStringHidden());
+			System.out.println("Player:              " + player.getCardString());
+			System.out.println("Dealer total:        ?");
+			if(player.hasSplit()) {
+				System.out.println("Player first total:  " + player.getTotal());
+				System.out.println("Player second total: " + player.getTotalSplit());
+			}
+			else {
+				System.out.println("Player total:        " + player.getTotal());
 
+			}
 		}
-		System.out.println();
+		
+		GUI.displayCards(player, dealer, message, true);
 	}
 	
 	//prints cards but only dealer's first card is visible
-	public void printGameDataDealerVisible() {
-		System.out.println("Dealer:              " + dealer.getCardStringVisible());
-		System.out.println("Player:              " + player.getCardString());
-		
-		if(dealer.hasSplit()) {
-			System.out.println("Dealer first total:  " + dealer.getTotal());
-			System.out.println("Dealer second total: " + dealer.getTotalSplit());
-		}
-		else {
-			System.out.println("Dealer total:        " + dealer.getTotal());
+	public void printGameDataDealerVisible(String message) {
+		System.out.println("\n" +  message);
+		if(!message.contains("stands")) {
+			System.out.println("Dealer:              " + dealer.getCardStringVisible());
+			System.out.println("Player:              " + player.getCardString());
+			
+			if(dealer.hasSplit()) {
+				System.out.println("Dealer first total:  " + dealer.getTotal());
+				System.out.println("Dealer second total: " + dealer.getTotalSplit());
+			}
+			else {
+				System.out.println("Dealer total:        " + dealer.getTotal());
 
-		}
-		if(player.hasSplit()) {
-			System.out.println("Player first total:  " + player.getTotal());
-			System.out.println("Player second total: " + player.getTotalSplit());
-		}
-		else {
-			System.out.println("Player total:        " + player.getTotal());
+			}
+			if(player.hasSplit()) {
+				System.out.println("Player first total:  " + player.getTotal());
+				System.out.println("Player second total: " + player.getTotalSplit());
+			}
+			else {
+				System.out.println("Player total:        " + player.getTotal());
 
+			}
 		}
-		System.out.println();
+
+		GUI.displayCards(player, dealer, message, false);
+
 	}
 }

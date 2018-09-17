@@ -13,9 +13,11 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -30,12 +32,19 @@ public class GUI extends Application {
 	private static Map<String, Image> cards;
 	private static ImageView imgView;
 	private Button consoleBtn;
+	private Label label;
+	private Label sublabel;
 	private TextField fileTxt;
 	private Button fileBtn;
 	private Button hitBtn;
 	private Button standBtn;
 	private Button splitBtn;
 	private Label errorLabel;
+	private Label winnerLabel;
+	static HBox hbox;
+	static ScrollPane canvas;
+	static Pane container;
+	static Scene scene;
 	
 	GameController game;
 	
@@ -47,8 +56,10 @@ public class GUI extends Application {
 	public void start(Stage stage) {
 		game = new GameController();
 		
-		Pane canvas = new Pane();
-        Scene scene = new Scene(canvas, 800, 600);
+		hbox = new HBox();
+		container = new Pane();
+		canvas = new ScrollPane(hbox);
+        scene = new Scene(canvas, 800, 600);
         stage.setTitle("Blackjack");
         stage.setScene(scene);
         stage.show();
@@ -57,11 +68,11 @@ public class GUI extends Application {
         System.out.println(cards.toString());
 	}
 	
-	public void initUI(Pane canvas) {
-		Label label = new Label("Select console or file input:");
+	public void initUI(ScrollPane canvas2) {
+		label = new Label("Select console or file input:");
 		label.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
 		label.relocate(20, 20);
-		Label sublabel = new Label("*Not really console input since there's a UI now, but you know what I mean.");
+		sublabel = new Label("*Not really console input since there's a UI now, but you know what I mean.");
 		sublabel.setFont(Font.font("Serif", FontWeight.NORMAL, 14));
 		sublabel.relocate(20, 50);
 		
@@ -78,8 +89,11 @@ public class GUI extends Application {
 		errorLabel.relocate(20, 140);
 		errorLabel.setTextFill(Color.RED);
 		
-		canvas.getChildren().addAll(label, sublabel, consoleBtn, fileTxt, fileBtn, errorLabel);
+		winnerLabel = new Label();
+		winnerLabel.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
 		
+		container.getChildren().addAll(label, sublabel, consoleBtn, fileTxt, fileBtn, errorLabel);
+		canvas.setContent(container);
 		//String winner = "";
 		
 		fileBtn.setOnAction(new EventHandler<ActionEvent>() {	
@@ -90,7 +104,14 @@ public class GUI extends Application {
 				if(validFileResult.equals("Y")) {
 					String fileName = String.valueOf("src/main/resources/" + fileTxt.getText());
 					String[] gameMoves = game.convertFileToArray(fileName);
-					game.playGame(gameMoves, "F");
+					clearMenu();
+					String winner = game.playGame(gameMoves, "F");
+					winnerLabel.setText(winner);
+					winnerLabel.relocate(10, playerHandy - 100);
+					if(winner.equals("Player wins!")){ winnerLabel.setTextFill(Color.GREEN);}
+					else {winnerLabel.setTextFill(Color.RED);}
+					container.getChildren().addAll(winnerLabel);
+					canvas.setContent(container);
 				}
 				else {
 					errorLabel.setText(validFileResult);
@@ -103,11 +124,21 @@ public class GUI extends Application {
 			public void handle(ActionEvent event) {
 				Deck deck = new Deck();
 				deck.shuffle();
-				game.playGame(deck.toArray(), "C");
+				clearMenu();
+				//game.playGame(deck.toArray(), "C");
 			}
 		});
 		
 		
+	}
+	
+	public void clearMenu() {
+		label.setVisible(false);
+		sublabel.setVisible(false);
+		fileTxt.setVisible(false);
+		fileBtn.setVisible(false);
+		consoleBtn.setVisible(false);	
+		errorLabel.setVisible(false);
 	}
 	
 	public void importImages() {
@@ -136,32 +167,102 @@ public class GUI extends Application {
 		}
 	}
 	
-	public static void displayCards(Player player, Dealer dealer) {
+	static int messageLabely = 10;
+	static int playerHandy = 110;
+	static int playerSplitHandy = 110;
+	static int dealerHandy = 30;
+	static int dealerSplitHandy = 30;
+	public static void displayCards(Player player, Dealer dealer, String message, boolean dealerHidden) {
+
 		//clear existings cards
 		
 		//add new cards
-		int playerHandx = 10;
-		int playerHandy = 10;
-		int playerSplitHandx = 10;
-		int playerSplitHandy = 150;
-		int dealerHandx = 10;
-		int dealerHandy = 300;
-		int dealerSplitHandx = 10;
-		int dealerSplitHandy = 450;
+		int playerHandx = 50;
+		int playerSplitHandx = 50;
+		int dealerHandx = 50;
+		int dealerSplitHandx = 50;
+		
+		Label messageLabel = new Label(message);
+		messageLabel.relocate(10, messageLabely);
+		Label playerLabel = new Label("Player");
+		playerLabel.relocate(10, playerHandy + 15);
+		Label dealerLabel = new Label("Dealer");
+		dealerLabel.relocate(10,  dealerHandy + 15);
+		
+		Label playerTotal = new Label();
+		playerTotal.relocate(10, playerHandy + 30);
+		Label dealerTotal = new Label();
+		dealerTotal.relocate(10,  dealerHandy + 30);
+		if(player.hasSplit()) {
+			playerTotal.setText("Totals:\n" + player.getTotal() + ", " + player.getTotalSplit());
+		}
+		else {
+			playerTotal.setText("Total:\n" + player.getTotal());
+		}
+		
+		if(dealerHidden) {
+			dealerTotal.setText("Total:\n?");
+		}
+		else if(dealer.hasSplit()) {
+			dealerTotal.setText("Totals:\n" + dealer.getTotal() + ", " + dealer.getTotalSplit());
+		}
+		else {
+			dealerTotal.setText("Total:\n" + dealer.getTotal());
+		}
+		
+		
+		container.getChildren().addAll(messageLabel, playerLabel, dealerLabel, playerTotal, dealerTotal);
+		
 		for(int i = 0; i < player.getHand().getSize(); i++) {
 			imgView = new ImageView();
 			String playerCard = player.getHand().getCards().get(i).toString();
 			imgView.setImage(cards.get(playerCard));
 			imgView.relocate(playerHandx, playerHandy);
+			imgView.setFitWidth(50);
+			imgView.setFitHeight(75);
+			canvas.setContent(imgView);
+			container.getChildren().addAll(imgView);
+			playerHandx += 50;
 		}
 		for(int i = 0; i < player.getSplitHand().getSize(); i++) {
-			
+			imgView = new ImageView();
+			String playerCard = player.getSplitHand().getCards().get(i).toString();
+			imgView.setImage(cards.get(playerCard));
+			imgView.relocate((50 * player.getHand().getSize()) + 50 + playerSplitHandx, playerSplitHandy);
+			imgView.setFitWidth(50);
+			imgView.setFitHeight(75);
+			container.getChildren().addAll(imgView);
+			playerSplitHandx += 50;
 		}
 		for(int i = 0; i < dealer.getHand().getSize(); i++) {
-			
+			imgView = new ImageView();
+			String dealerCard = dealer.getHand().getCards().get(i).toString();
+			if(i > 0 && dealerHidden) { imgView.setImage(cards.get("hi")); }
+			else { imgView.setImage(cards.get(dealerCard));}
+			imgView.relocate(dealerHandx, dealerHandy);
+			imgView.setFitWidth(50);
+			imgView.setFitHeight(75);
+			canvas.setContent(imgView);
+			container.getChildren().addAll(imgView);
+			dealerHandx += 50;
 		}
 		for(int i = 0; i < dealer.getSplitHand().getSize(); i++) {
-			
+			imgView = new ImageView();
+			String dealerCard = dealer.getSplitHand().getCards().get(i).toString();
+			imgView.setImage(cards.get(dealerCard));
+			imgView.relocate((50 * dealer.getHand().getSize()) + 50 + dealerSplitHandx, dealerSplitHandy);
+			imgView.setFitWidth(50);
+			imgView.setFitHeight(75);
+			container.getChildren().addAll(imgView);
+			dealerSplitHandx += 50;
 		}
+		
+		messageLabely += 220;
+		playerHandy += 220;
+		playerSplitHandy += 220;
+		dealerHandy += 220;
+		dealerSplitHandy += 220;
+		
+		canvas.setContent(container);
 	}
 }
