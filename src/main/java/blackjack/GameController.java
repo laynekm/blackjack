@@ -86,7 +86,6 @@ public class GameController {
 			else {
 				printGameDataDealerHidden("Player hits:");
 			}
-			//printGameDataDealerHidden();
 			if(consoleInput) { 	playerMove = promptMove(); }
 			else { 				playerMove = moves[x++]; }
 		}
@@ -321,28 +320,34 @@ public class GameController {
 	
 	public String promptMove() {
 		String input = "";
+		/*
 		while(!isValidMove(input)) {
 			System.out.print("Hit (H) or Stand (S): ");
 			input = scanner.nextLine();
-		}
+		}*/
+		input = GUI.promptMoveButton();
 		return input;
 	}
 	
 	public String promptMoveWithSplit() {
 		String input = "";
+		/*
 		while(!isValidMoveWithSplit(input)) {
 			System.out.print("Hit (H), Stand (S), or Split (D): ");
 			input = scanner.nextLine();
-		}
+		}*/
+		input = GUI.promptMoveButtonWithSplit();
 		return input;
 	}
 	
 	public String promptPlayAgain() {
 		String input = "";
+		/*
 		while(!isValidPlayAgain(input)) {
 			System.out.print("Play again (Y/N): ");
 			input = scanner.nextLine();
-		}
+		}*/
+		input = GUI.promptPlayAgain();
 		return input;
 	}
 	

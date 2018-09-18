@@ -36,15 +36,19 @@ public class GUI extends Application {
 	private Label sublabel;
 	private TextField fileTxt;
 	private Button fileBtn;
-	private Button hitBtn;
-	private Button standBtn;
-	private Button splitBtn;
+	private static Button hitBtn;
+	private static Button standBtn;
+	private static Button splitBtn;
 	private Label errorLabel;
 	private Label winnerLabel;
+	private static Label placeholderLabel;
 	static HBox hbox;
 	static ScrollPane canvas;
 	static Pane container;
 	static Scene scene;
+	static Stage promptStage;
+	static Pane promptCanvas;
+    static Scene promptScene;
 	
 	GameController game;
 	
@@ -60,6 +64,7 @@ public class GUI extends Application {
 		container = new Pane();
 		canvas = new ScrollPane(hbox);
         scene = new Scene(canvas, 800, 600);
+        
         stage.setTitle("Blackjack");
         stage.setScene(scene);
         stage.show();
@@ -89,12 +94,25 @@ public class GUI extends Application {
 		errorLabel.relocate(20, 140);
 		errorLabel.setTextFill(Color.RED);
 		
+		hitBtn = new Button("Hit");
+		hitBtn.setMaxWidth(100);
+		hitBtn.relocate(10, 10);
+		hitBtn.setVisible(false);
+		standBtn = new Button("Stand");
+		standBtn.setMaxWidth(100);
+		standBtn.relocate(10, 40);
+		standBtn.setVisible(false);
+		splitBtn = new Button("Split");
+		splitBtn.setMaxWidth(100);
+		splitBtn.relocate(10, 70);
+		splitBtn.setVisible(false);
+		placeholderLabel = new Label("");
+		
 		winnerLabel = new Label();
-		winnerLabel.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
+		winnerLabel.setFont(Font.font("Serif", FontWeight.NORMAL, 50));
 		
 		container.getChildren().addAll(label, sublabel, consoleBtn, fileTxt, fileBtn, errorLabel);
 		canvas.setContent(container);
-		//String winner = "";
 		
 		fileBtn.setOnAction(new EventHandler<ActionEvent>() {	
 			@Override
@@ -107,7 +125,7 @@ public class GUI extends Application {
 					clearMenu();
 					String winner = game.playGame(gameMoves, "F");
 					winnerLabel.setText(winner);
-					winnerLabel.relocate(10, playerHandy - 100);
+					winnerLabel.relocate(10, playerHandy - 125);
 					if(winner.equals("Player wins!")){ winnerLabel.setTextFill(Color.GREEN);}
 					else {winnerLabel.setTextFill(Color.RED);}
 					container.getChildren().addAll(winnerLabel);
@@ -125,7 +143,14 @@ public class GUI extends Application {
 				Deck deck = new Deck();
 				deck.shuffle();
 				clearMenu();
-				//game.playGame(deck.toArray(), "C");
+				setUpButtonEventHandlers();
+				String winner = game.playGame(deck.toArray(), "C");
+				winnerLabel.setText(winner);
+				winnerLabel.relocate(10, playerHandy - 125);
+				if(winner.equals("Player wins!")){ winnerLabel.setTextFill(Color.GREEN);}
+				else {winnerLabel.setTextFill(Color.RED);}
+				container.getChildren().addAll(winnerLabel);
+				canvas.setContent(container);
 			}
 		});
 		
@@ -264,5 +289,72 @@ public class GUI extends Application {
 		dealerSplitHandy += 220;
 		
 		canvas.setContent(container);
+	}
+	
+	public void setUpButtonEventHandlers() {
+		hitBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				placeholderLabel.setText("H");
+				hitBtn.setVisible(false);
+				standBtn.setVisible(false);
+				splitBtn.setVisible(false);
+				promptStage.close();
+			}
+		});
+		standBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				placeholderLabel.setText("S");
+				hitBtn.setVisible(false);
+				standBtn.setVisible(false);
+				splitBtn.setVisible(false);
+				promptStage.close();
+			}
+		});
+		standBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				placeholderLabel.setText("D");
+				hitBtn.setVisible(false);
+				standBtn.setVisible(false);
+				splitBtn.setVisible(false);
+				promptStage.close();
+			}
+		});
+	}
+	
+	public static String promptMoveButton() {
+		hitBtn.setVisible(true);
+		standBtn.setVisible(true);
+		placeholderLabel.setText("");
+		String returnString = pauseAndWaitForButton();
+		placeholderLabel.setText("");
+		return returnString;
+	}
+	
+	public static String promptMoveButtonWithSplit() {
+		hitBtn.setVisible(true);
+		standBtn.setVisible(true);
+		splitBtn.setVisible(true);
+		placeholderLabel.setText("");
+		String returnString = pauseAndWaitForButton();
+		placeholderLabel.setText("");
+		return returnString;
+	}
+	
+	public static String promptPlayAgain() {
+		return "";
+	}
+	
+	private static String pauseAndWaitForButton() {
+		promptStage = new Stage();
+		promptCanvas = new Pane();
+        promptScene = new Scene(promptCanvas, 150, 150);
+        promptStage.setTitle("Select Option");
+        promptStage.setScene(promptScene);
+		promptCanvas.getChildren().addAll(hitBtn, standBtn, splitBtn);
+		promptStage.showAndWait();
+		return placeholderLabel.getText();
 	}
 }
