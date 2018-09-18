@@ -99,36 +99,27 @@ public class GameControllerTest extends TestCase{
 		String[] fileArray9 = game.convertFileToArray(fileName9);
 		String[] fileArray10 = game.convertFileToArray(fileName10);
 		
-		assertTrue(game.playGame(fileArray1, "F").equals("Dealer wins!"));
+		assertTrue(game.playGame(fileArray1, "T").equals("Dealer wins!"));
 		game.endGame();
-		assertTrue(game.playGame(fileArray2, "F").equals("Player wins!"));
+		assertTrue(game.playGame(fileArray2, "T").equals("Player wins!"));
 		game.endGame();
-		assertTrue(game.playGame(fileArray3, "F").equals("Player wins!"));
+		assertTrue(game.playGame(fileArray3, "T").equals("Player wins!"));
 		game.endGame();
-		assertTrue(game.playGame(fileArray4, "F").equals("Player wins!"));
+		assertTrue(game.playGame(fileArray4, "T").equals("Player wins!"));
 		game.endGame();
-		assertTrue(game.playGame(fileArray5, "F").equals("Player wins!"));
+		assertTrue(game.playGame(fileArray5, "T").equals("Player wins!"));
 		game.endGame();
-		assertTrue(game.playGame(fileArray6, "F").equals("Dealer wins!"));
+		assertTrue(game.playGame(fileArray6, "T").equals("Dealer wins!"));
 		game.endGame();
-		assertTrue(game.playGame(fileArray7, "F").equals("Player wins!"));
+		assertTrue(game.playGame(fileArray7, "T").equals("Player wins!"));
 		game.endGame();
-		assertTrue(game.playGame(fileArray8, "F").equals("Dealer wins!"));
+		assertTrue(game.playGame(fileArray8, "T").equals("Dealer wins!"));
 		game.endGame();
-		assertTrue(game.playGame(fileArray9, "F").equals("Dealer wins!"));
+		assertTrue(game.playGame(fileArray9, "T").equals("Dealer wins!"));
 		game.endGame();
-		assertTrue(game.playGame(fileArray10, "F").equals("Player wins!"));
+		assertTrue(game.playGame(fileArray10, "T").equals("Player wins!"));
 		game.endGame();
 		
-	}
-	
-	public void testPlayGameConsoleInput() {		
-		GameController game = new GameController();
-		Deck deck = new Deck();
-		deck.shuffle();
-		String[] deckArray = deck.toArray();
-		String gameResult = game.playGame(deckArray, "C");
-		assertTrue(gameResult.equals("Player wins!") || gameResult.equals("Dealer wins!"));
 	}
 	
 	public void testDetermineWinner() {
