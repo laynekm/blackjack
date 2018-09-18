@@ -34,6 +34,7 @@ public class GUI extends Application {
 	private static Button consoleBtn;
 	private static Label label;
 	private static Label sublabel;
+	private static Label exampleLabel;
 	private static TextField fileTxt;
 	private static Button fileBtn;
 	private static Button hitBtn;
@@ -83,8 +84,8 @@ public class GUI extends Application {
 	}
 	
 	public void initUI(ScrollPane canvas) {
-		//clear anything that's already there		
 		label = new Label("Select console or file input:");
+		
 		label.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
 		label.relocate(20, 20);
 		sublabel = new Label("*Not really console input since there's a UI now, but you know what I mean.");
@@ -100,6 +101,9 @@ public class GUI extends Application {
 		fileBtn.relocate(20,  110);
 		fileTxt = new TextField();
 		fileTxt.relocate(140,  110);
+		exampleLabel = new Label("eg. playerWins.txt, playerSplits.txt, dealerSplits.txt, etc.");
+		exampleLabel.setFont(Font.font("Serif", FontWeight.NORMAL, 14));
+		exampleLabel.relocate(300, 110);
 		errorLabel = new Label();
 		errorLabel.relocate(20, 140);
 		errorLabel.setTextFill(Color.RED);
@@ -137,7 +141,7 @@ public class GUI extends Application {
 		winnerLabel = new Label();
 		winnerLabel.setFont(Font.font("Serif", FontWeight.NORMAL, 50));
 		
-		container.getChildren().addAll(label, sublabel, consoleBtn, fileTxt, fileBtn, errorLabel);
+		container.getChildren().addAll(label, sublabel, consoleBtn, fileTxt, fileBtn, exampleLabel, errorLabel);
 		canvas.setContent(container);
 
 		fileBtn.setOnAction(new EventHandler<ActionEvent>() {	
@@ -148,7 +152,10 @@ public class GUI extends Application {
 				if(validFileResult.equals("Y")) {
 					String fileName = String.valueOf("src/main/resources/" + fileTxt.getText());
 					String[] gameMoves = game.convertFileToArray(fileName);
+					
 					clearMenu();
+					setUpButtonEventHandlers();
+
 					String winner = game.playGame(gameMoves, "F");
 					winnerLabel.setText(winner);
 					winnerLabel.relocate(10, playerHandy - 125);
@@ -156,6 +163,7 @@ public class GUI extends Application {
 					else {winnerLabel.setTextFill(Color.RED);}
 					container.getChildren().addAll(winnerLabel);
 					canvas.setContent(container);
+					
 					String playAgain = game.promptPlayAgain();
 					if(playAgain.equals("Y")) {
 						game.endGame();
@@ -212,6 +220,7 @@ public class GUI extends Application {
 		fileBtn.setVisible(false);
 		consoleBtn.setVisible(false);	
 		errorLabel.setVisible(false);
+		exampleLabel.setVisible(false);
 	}
 	
 	public void importImages() {
@@ -241,9 +250,6 @@ public class GUI extends Application {
 	}
 	
 	public static void displayCards(Player player, Dealer dealer, String message, boolean dealerHidden) {
-
-		//clear existings cards
-		
 		//add new cards
 		int playerHandx = 50;
 		int playerSplitHandx = 50;

@@ -50,7 +50,7 @@ public class GameController {
 		
 		//game is over if dealer or player get a blackjack (ie. 21)
 		if(dealer.hasBlackjack()) {
-			printGameDataDealerVisible("Dealer got a blackjack!");
+			printGameDataDealerVisible("Dealer got a blackjack! Dealer's cards revealed:");
 			return "Dealer wins!"; 
 		}
 		if(player.hasBlackjack()) { 
@@ -102,8 +102,6 @@ public class GameController {
 		if(player.hasSplit()) {
 			
 			//player must hit on second hand
-			//if(consoleInput) { 	playerMove = promptMove(); }
-			//else { 				playerMove = moves[x++]; }
 			Card card5 = new Card(moves[x++]);
 			if(!player.hitSplit(card5)) {
 				printGameDataDealerHidden("Card is dealt to player's second hand. Player went bust on second hand! Total: " + player.getTotal());
@@ -154,11 +152,11 @@ public class GameController {
 			Card card = new Card(moves[x++]);
 			if(!dealer.hit(card)) {
 				if(dealer.hasSplit()) {
-					printGameDataDealerVisible("Dealer went bust on first hand! Total: " + dealer.getTotal());
+					printGameDataDealerVisible("Dealer hit and went bust on first hand! Total: " + dealer.getTotal());
 					break;
 				}
 				else {
-					printGameDataDealerVisible("Dealer went bust! Total: " + dealer.getTotal());
+					printGameDataDealerVisible("Dealer hit and went bust! Total: " + dealer.getTotal());
 					return "Player wins!"; 
 				}
 			}
@@ -167,7 +165,7 @@ public class GameController {
 			}
 		}
 		
-		printGameDataDealerVisible("Dealer stands.");
+		if(dealer.getTotal() <= 21) {printGameDataDealerVisible("Dealer stands.");}
 
 		//if dealer has split, now hits or stands on split
 		if(dealer.hasSplit()) {
@@ -184,7 +182,7 @@ public class GameController {
 			while(dealer.determineHitSplit().equals("H")) {
 				Card card = new Card(moves[x++]);
 				if(!dealer.hitSplit(card)) {
-					printGameDataDealerVisible("Dealer went bust on second hand! Total: " + dealer.getTotal());
+					printGameDataDealerVisible("Dealer hit and went bust on second hand! Total: " + dealer.getTotal());
 					break;
 				}
 				else {
