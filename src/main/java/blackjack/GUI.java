@@ -31,24 +31,33 @@ public class GUI extends Application {
 	//note: the key for the hidden card is 'hi'
 	private static Map<String, Image> cards;
 	private static ImageView imgView;
-	private Button consoleBtn;
-	private Label label;
-	private Label sublabel;
-	private TextField fileTxt;
-	private Button fileBtn;
+	private static Button consoleBtn;
+	private static Label label;
+	private static Label sublabel;
+	private static TextField fileTxt;
+	private static Button fileBtn;
 	private static Button hitBtn;
 	private static Button standBtn;
 	private static Button splitBtn;
-	private Label errorLabel;
-	private Label winnerLabel;
+	private static Label playAgainLabel;
+	private static Button playAgainBtnYes;
+	private static Button playAgainBtnNo;
+	private static Label errorLabel;
+	private static Label winnerLabel;
 	private static Label placeholderLabel;
-	static HBox hbox;
-	static ScrollPane canvas;
-	static Pane container;
-	static Scene scene;
-	static Stage promptStage;
-	static Pane promptCanvas;
-    static Scene promptScene;
+	private static HBox hbox;
+	private static ScrollPane canvas;
+	private static Pane container;
+	private static Scene scene;
+	private static Stage promptStage;
+	private static Pane promptCanvas;
+	private static Scene promptScene;
+	
+	static int messageLabely = 10;
+	static int playerHandy = 110;
+	static int playerSplitHandy = 110;
+	static int dealerHandy = 30;
+	static int dealerSplitHandy = 30;
 	
 	GameController game;
 	
@@ -73,7 +82,8 @@ public class GUI extends Application {
         System.out.println(cards.toString());
 	}
 	
-	public void initUI(ScrollPane canvas2) {
+	public void initUI(ScrollPane canvas) {
+		//clear anything that's already there		
 		label = new Label("Select console or file input:");
 		label.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
 		label.relocate(20, 20);
@@ -108,12 +118,28 @@ public class GUI extends Application {
 		splitBtn.setVisible(false);
 		placeholderLabel = new Label("");
 		
+		playAgainLabel = new Label("Play again?");
+		playAgainLabel.setFont(Font.font("Serif", FontWeight.NORMAL, 14));
+		playAgainLabel.relocate(10, 10);
+		playAgainBtnYes = new Button("Yes");
+		playAgainBtnYes.setMaxWidth(100);
+		playAgainBtnYes.relocate(10, 40);
+		playAgainBtnNo = new Button("No");
+		playAgainBtnNo.setMaxWidth(100);
+		playAgainBtnNo.relocate(50, 40);
+		
+		messageLabely = 10;
+		playerHandy = 110;
+		playerSplitHandy = 110;
+		dealerHandy = 30;
+		dealerSplitHandy = 30;
+		
 		winnerLabel = new Label();
 		winnerLabel.setFont(Font.font("Serif", FontWeight.NORMAL, 50));
 		
 		container.getChildren().addAll(label, sublabel, consoleBtn, fileTxt, fileBtn, errorLabel);
 		canvas.setContent(container);
-		
+
 		fileBtn.setOnAction(new EventHandler<ActionEvent>() {	
 			@Override
 			public void handle(ActionEvent event) {
@@ -130,6 +156,16 @@ public class GUI extends Application {
 					else {winnerLabel.setTextFill(Color.RED);}
 					container.getChildren().addAll(winnerLabel);
 					canvas.setContent(container);
+					String playAgain = game.promptPlayAgain();
+					if(playAgain.equals("Y")) {
+						game.endGame();
+						container.getChildren().clear();
+						canvas.setContent(container);
+						initUI(canvas);
+					}
+					else {
+						System.exit(0);
+					}
 				}
 				else {
 					errorLabel.setText(validFileResult);
@@ -142,6 +178,7 @@ public class GUI extends Application {
 			public void handle(ActionEvent event) {
 				Deck deck = new Deck();
 				deck.shuffle();
+				
 				clearMenu();
 				setUpButtonEventHandlers();
 				String winner = game.playGame(deck.toArray(), "C");
@@ -151,6 +188,17 @@ public class GUI extends Application {
 				else {winnerLabel.setTextFill(Color.RED);}
 				container.getChildren().addAll(winnerLabel);
 				canvas.setContent(container);
+				
+				String playAgain = game.promptPlayAgain();
+				if(playAgain.equals("Y")) {
+					game.endGame();
+					container.getChildren().clear();
+					canvas.setContent(container);
+					initUI(canvas);
+				}
+				else {
+					System.exit(0);
+				}
 			}
 		});
 		
@@ -192,11 +240,6 @@ public class GUI extends Application {
 		}
 	}
 	
-	static int messageLabely = 10;
-	static int playerHandy = 110;
-	static int playerSplitHandy = 110;
-	static int dealerHandy = 30;
-	static int dealerSplitHandy = 30;
 	public static void displayCards(Player player, Dealer dealer, String message, boolean dealerHidden) {
 
 		//clear existings cards
@@ -312,13 +355,33 @@ public class GUI extends Application {
 				promptStage.close();
 			}
 		});
-		standBtn.setOnAction(new EventHandler<ActionEvent>() {
+		splitBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				placeholderLabel.setText("D");
 				hitBtn.setVisible(false);
 				standBtn.setVisible(false);
 				splitBtn.setVisible(false);
+				promptStage.close();
+			}
+		});
+		playAgainBtnNo.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				placeholderLabel.setText("N");
+				playAgainLabel.setVisible(false);
+				playAgainBtnNo.setVisible(false);
+				playAgainBtnYes.setVisible(false);
+				promptStage.close();
+			}
+		});
+		playAgainBtnYes.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				placeholderLabel.setText("Y");
+				playAgainLabel.setVisible(false);
+				playAgainBtnNo.setVisible(false);
+				playAgainBtnYes.setVisible(false);
 				promptStage.close();
 			}
 		});
@@ -344,7 +407,24 @@ public class GUI extends Application {
 	}
 	
 	public static String promptPlayAgain() {
-		return "";
+		playAgainBtnYes.setVisible(true);
+		playAgainBtnNo.setVisible(true);
+		placeholderLabel.setText("");
+		String returnString = pauseAndWaitForButtonPlayAgain();
+		placeholderLabel.setText("");
+		return returnString;
+	}
+	
+	
+	private static String pauseAndWaitForButtonPlayAgain() {
+		promptStage = new Stage();
+		promptCanvas = new Pane();
+        promptScene = new Scene(promptCanvas, 150, 150);
+        promptStage.setTitle("Select Option");
+        promptStage.setScene(promptScene);
+		promptCanvas.getChildren().addAll(playAgainLabel, playAgainBtnYes, playAgainBtnNo);
+		promptStage.showAndWait();
+		return placeholderLabel.getText();
 	}
 	
 	private static String pauseAndWaitForButton() {

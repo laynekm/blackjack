@@ -14,6 +14,7 @@ public class GameController {
 	
 	private Player player;
 	private Dealer dealer;
+	private boolean testInput;
 	
 	public GameController() {
 		 player = new Player();
@@ -28,6 +29,7 @@ public class GameController {
 		
 		//determines how input will be gathered
 		boolean consoleInput;
+		if(inputMode.equals("T")) {testInput = true; }
 		if(inputMode.equals("C")) { consoleInput = true; }
 		else { 						consoleInput = false; }
 		
@@ -58,7 +60,7 @@ public class GameController {
 		
 		//split player hand if able to and player decides to
 		if(consoleInput && player.canSplit()) { 		playerMove = promptMoveWithSplit(); }
-		else if(consoleInput) { 						playerMove = promptMove(); }
+		//else if(consoleInput) { 						playerMove = promptMove(); }
 		else { 											playerMove = moves[x]; }
 		if(player.canSplit() && playerMove.equals("D")) {
 			x++;
@@ -66,17 +68,19 @@ public class GameController {
 			System.out.println(moves[x].toString());
 			Card card4 = new Card(moves[x++]);
 			player.hit(card4);
-			printGameDataDealerHidden("Player splits: ");
+			printGameDataDealerHidden("Player splits, and a card is added to their first hand: ");
 		}
 		
 		//player hits or stands
-		if(!consoleInput) { playerMove = moves[x++]; }
+		if(consoleInput && !player.canSplit()) { 		playerMove = promptMove(); }
+		else{											playerMove = moves[x++]; }
 		while(playerMove.equals("H")) {
 			playerMove = "";
 			Card card = new Card(moves[x++]);
 			if(!player.hit(card)) {
 				if(player.hasSplit()) {
 					printGameDataDealerHidden("Player hit and went bust on first hand! Total: " + player.getTotal());
+					break;
 				}
 				else {
 					printGameDataDealerHidden("Player hit and went bust! Total: " + player.getTotal());
@@ -96,14 +100,18 @@ public class GameController {
 		
 		//if player has split, now hits or stands on split
 		if(player.hasSplit()) {
-			//second card automatically gets dealt to second hand
+			
+			//player must hit on second hand
+			//if(consoleInput) { 	playerMove = promptMove(); }
+			//else { 				playerMove = moves[x++]; }
 			Card card5 = new Card(moves[x++]);
 			if(!player.hitSplit(card5)) {
-				printGameDataDealerHidden("Player went bust on second hand! Total: " + player.getTotal());
+				printGameDataDealerHidden("Card is dealt to player's second hand. Player went bust on second hand! Total: " + player.getTotal());
 			}
 			else {
-				printGameDataDealerHidden("Player hits on second hand: ");
+				printGameDataDealerHidden("Card is dealt to player's second hand: ");
 			}
+
 			
 			//decides whether user hits on second hand
 			if(consoleInput) { 	playerMove = promptMove(); }
@@ -113,10 +121,14 @@ public class GameController {
 				Card card6 = new Card(moves[x++]);
 				if(!player.hitSplit(card6)) {
 					printGameDataDealerVisible("Player went bust on second hand! Total: " + player.getTotal());
+					break;
 				}
 				else {
 					printGameDataDealerHidden("Player hits on second hand: ");
 				}
+				
+				if(consoleInput) { 	playerMove = promptMove(); }
+				else { 				playerMove = moves[x++]; }
 			}
 			
 			if(player.getTotal() > 21 && player.getTotalSplit() > 21) {
@@ -135,7 +147,7 @@ public class GameController {
 			dealer.split();
 			Card card4 = new Card(moves[x++]);
 			dealer.hit(card4);
-			printGameDataDealerVisible("Dealer splits:");
+			printGameDataDealerVisible("Dealer splits, and a card is added to their first hand:");
 		}
 		
 		while(dealer.determineHit().equals("H")) {
@@ -143,6 +155,7 @@ public class GameController {
 			if(!dealer.hit(card)) {
 				if(dealer.hasSplit()) {
 					printGameDataDealerVisible("Dealer went bust on first hand! Total: " + dealer.getTotal());
+					break;
 				}
 				else {
 					printGameDataDealerVisible("Dealer went bust! Total: " + dealer.getTotal());
@@ -162,16 +175,17 @@ public class GameController {
 			//second hand gets card delt automatically
 			Card card6 = new Card(moves[x++]);
 			if(!dealer.hitSplit(card6)) {
-				printGameDataDealerVisible("Dealer went bust on second hand! Total: " + dealer.getTotal());
+				printGameDataDealerVisible("Card is added to dealer's second hand. Dealer went bust on second hand! Total: " + dealer.getTotal());
 			}
 			else {
-				printGameDataDealerVisible("Dealer hits on second hand:");
+				printGameDataDealerVisible("Card is added to dealer's second hand:");
 			}
 			
 			while(dealer.determineHitSplit().equals("H")) {
 				Card card = new Card(moves[x++]);
 				if(!dealer.hitSplit(card)) {
 					printGameDataDealerVisible("Dealer went bust on second hand! Total: " + dealer.getTotal());
+					break;
 				}
 				else {
 					printGameDataDealerVisible("Dealer hits on second hand:");
@@ -368,7 +382,7 @@ public class GameController {
 			}
 		}
 		
-		GUI.displayCards(player, dealer, message, true);
+		if(!testInput) { GUI.displayCards(player, dealer, message, true); }
 	}
 	
 	//prints cards but only dealer's first card is visible
@@ -396,7 +410,7 @@ public class GameController {
 			}
 		}
 
-		GUI.displayCards(player, dealer, message, false);
+		if(!testInput) { GUI.displayCards(player, dealer, message, false); }
 
 	}
 }
