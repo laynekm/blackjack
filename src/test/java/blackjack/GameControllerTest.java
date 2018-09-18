@@ -3,9 +3,7 @@ package blackjack;
 import junit.framework.TestCase;
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class GameControllerTest extends TestCase{
 	
@@ -73,7 +71,9 @@ public class GameControllerTest extends TestCase{
 		
 	}
 	
-	public void testPlayGameFileInput() {
+	//using file or console input calls the same function; results will be the same for either input method
+	//for testing, the input parameter much be "T" to signify that the GUI should not be used
+	public void testPlayGame() {
 		GameController game = new GameController();
 	
 		//test with file input
