@@ -24,11 +24,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-//Application.launch(GUI.class, args);
-
 public class GUI extends Application {
 	
-	//note: the key for the hidden card is 'hi'
+	//UI elements
 	private static Map<String, Image> cards;
 	private static ImageView imgView;
 	private static Button consoleBtn;
@@ -54,6 +52,7 @@ public class GUI extends Application {
 	private static Pane promptCanvas;
 	private static Scene promptScene;
 	
+	//variable elements, used to keep track of positions of elements (ie. cards, labels)
 	static int messageLabely = 10;
 	static int playerHandy = 110;
 	static int playerSplitHandy = 110;
@@ -68,6 +67,7 @@ public class GUI extends Application {
 
 	@Override
 	public void start(Stage stage) {
+		//set up initial game screen
 		game = new GameController();
 		
 		hbox = new HBox();
@@ -84,6 +84,7 @@ public class GUI extends Application {
 	}
 	
 	public void initUI(ScrollPane canvas) {
+		//initialize game screen UI
 		label = new Label("Select console or file input:");
 		
 		label.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
@@ -141,13 +142,16 @@ public class GUI extends Application {
 		winnerLabel = new Label();
 		winnerLabel.setFont(Font.font("Serif", FontWeight.NORMAL, 50));
 		
+		//add UI elements to game screen
 		container.getChildren().addAll(label, sublabel, consoleBtn, fileTxt, fileBtn, exampleLabel, errorLabel);
 		canvas.setContent(container);
 
+		//event handlers for console and file input buttons
 		fileBtn.setOnAction(new EventHandler<ActionEvent>() {	
+			
+			//event handler for file input button; validates file then runs game
 			@Override
 			public void handle(ActionEvent event) {
-				
 				String validFileResult = game.isValidFile((String.valueOf("src/main/resources/" + fileTxt.getText())));
 				if(validFileResult.equals("Y")) {
 					String fileName = String.valueOf("src/main/resources/" + fileTxt.getText());
@@ -181,6 +185,7 @@ public class GUI extends Application {
 			}
 		});
 		
+		//event handler for console input button; creates and shuffles deck then runs game
 		consoleBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -213,6 +218,7 @@ public class GUI extends Application {
 		
 	}
 	
+	//makes elements in main menu invisible
 	public void clearMenu() {
 		label.setVisible(false);
 		sublabel.setVisible(false);
@@ -223,6 +229,8 @@ public class GUI extends Application {
 		exampleLabel.setVisible(false);
 	}
 	
+	//imports all images and adds them to a map, using the card name (extracted from file name) as the key
+	//note: the 'hidden' card gets mapped as 'hi'
 	public void importImages() {
 		File cardsDir = new File("src/main/resources/cards");
 		FilenameFilter imgFilter = new FilenameFilter() {
@@ -249,8 +257,9 @@ public class GUI extends Application {
 		}
 	}
 	
+	//displays cards to screen by iterating through each player's hands
+	//takes into account whether the dealer's full hand should be displayed or not
 	public static void displayCards(Player player, Dealer dealer, String message, boolean dealerHidden) {
-		//add new cards
 		int playerHandx = 50;
 		int playerSplitHandx = 50;
 		int dealerHandx = 50;
@@ -331,6 +340,7 @@ public class GUI extends Application {
 			dealerSplitHandx += 50;
 		}
 		
+		//update y positions for the next iteration
 		messageLabely += 220;
 		playerHandy += 220;
 		playerSplitHandy += 220;
@@ -340,6 +350,7 @@ public class GUI extends Application {
 		canvas.setContent(container);
 	}
 	
+	//event handlers for hit, stand, and split buttons
 	public void setUpButtonEventHandlers() {
 		hitBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -371,6 +382,8 @@ public class GUI extends Application {
 				promptStage.close();
 			}
 		});
+		
+		//event handlers for "play again?" buttons
 		playAgainBtnNo.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -393,6 +406,7 @@ public class GUI extends Application {
 		});
 	}
 	
+	//prompts called by GameController,
 	public static String promptMoveButton() {
 		hitBtn.setVisible(true);
 		standBtn.setVisible(true);
@@ -421,7 +435,9 @@ public class GUI extends Application {
 		return returnString;
 	}
 	
-	
+	//methods called by prompts, pause game by displaying a new window with buttons, continuing when a button is selected
+	//this was the simplest way to implement the ability to "pause" the game
+	//has the added benefit of being of not having to make the buttons automatically scroll with the rest of the cards
 	private static String pauseAndWaitForButtonPlayAgain() {
 		promptStage = new Stage();
 		promptCanvas = new Pane();
