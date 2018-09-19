@@ -31,7 +31,6 @@ public class GUI extends Application {
 	private static ImageView imgView;
 	private static Button consoleBtn;
 	private static Label label;
-	private static Label sublabel;
 	private static Label exampleLabel;
 	private static TextField fileTxt;
 	private static Button guiBtn;
@@ -66,7 +65,6 @@ public class GUI extends Application {
 		launch(args);
 	}
 
-	@Override
 	public void start(Stage stage) {
 		//set up initial game screen
 		game = new GameController();
@@ -83,7 +81,7 @@ public class GUI extends Application {
         initUI(canvas);
 	}
 	
-	public void initUI(ScrollPane canvas) {
+	public void initUI(final ScrollPane canvas) {
 		//initialize game screen UI
 		label = new Label("Select console or file input:");
 		label.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
@@ -151,7 +149,6 @@ public class GUI extends Application {
 		fileBtn.setOnAction(new EventHandler<ActionEvent>() {	
 			
 			//event handler for file input button; validates file then runs game
-			@Override
 			public void handle(ActionEvent event) {
 				String validFileResult = game.isValidFile((String.valueOf("src/main/resources/" + fileTxt.getText())));
 				if(validFileResult.equals("Y")) {
@@ -188,7 +185,6 @@ public class GUI extends Application {
 		
 		//event handler for console input button; creates and shuffles deck then runs game
 		consoleBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
 			public void handle(ActionEvent event) {
 				Deck deck = new Deck();
 				deck.shuffle();
@@ -215,7 +211,6 @@ public class GUI extends Application {
 
 		//event handler for gui input button; creates and shuffles deck then runs game
 		guiBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
 			public void handle(ActionEvent event) {
 				Deck deck = new Deck();
 				deck.shuffle();
@@ -261,7 +256,6 @@ public class GUI extends Application {
 	public void importImages() {
 		File cardsDir = new File("src/main/resources/cards");
 		FilenameFilter imgFilter = new FilenameFilter() {
-			@Override
 			public boolean accept(File dir, String name) {
 				return name.toLowerCase().endsWith("png");
 			}
@@ -380,7 +374,6 @@ public class GUI extends Application {
 	//event handlers for hit, stand, and split buttons
 	public void setUpButtonEventHandlers() {
 		hitBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
 			public void handle(ActionEvent event) {
 				placeholderLabel.setText("H");
 				hitBtn.setVisible(false);
@@ -390,7 +383,6 @@ public class GUI extends Application {
 			}
 		});
 		standBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
 			public void handle(ActionEvent event) {
 				placeholderLabel.setText("S");
 				hitBtn.setVisible(false);
@@ -400,7 +392,6 @@ public class GUI extends Application {
 			}
 		});
 		splitBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
 			public void handle(ActionEvent event) {
 				placeholderLabel.setText("D");
 				hitBtn.setVisible(false);
@@ -412,7 +403,6 @@ public class GUI extends Application {
 		
 		//event handlers for "play again?" buttons
 		playAgainBtnNo.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
 			public void handle(ActionEvent event) {
 				placeholderLabel.setText("N");
 				playAgainLabel.setVisible(false);
@@ -422,7 +412,6 @@ public class GUI extends Application {
 			}
 		});
 		playAgainBtnYes.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
 			public void handle(ActionEvent event) {
 				placeholderLabel.setText("Y");
 				playAgainLabel.setVisible(false);
