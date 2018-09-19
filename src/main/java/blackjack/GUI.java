@@ -80,16 +80,14 @@ public class GUI extends Application {
         stage.show();
         importImages();
         initUI(canvas);
-        System.out.println(cards.toString());
 	}
 	
 	public void initUI(ScrollPane canvas) {
 		//initialize game screen UI
 		label = new Label("Select console or file input:");
-		
 		label.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
 		label.relocate(20, 20);
-		sublabel = new Label("*Not really console input since there's a UI now, but you know what I mean.");
+		sublabel = new Label("*Not really console input since there's a GUI now, but you know what I mean.");
 		sublabel.setFont(Font.font("Serif", FontWeight.NORMAL, 14));
 		sublabel.relocate(20, 50);
 		

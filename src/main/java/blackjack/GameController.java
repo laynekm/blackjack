@@ -22,11 +22,11 @@ public class GameController {
 	// MAIN GAME LOGIC METHOD
 	//************************
 	public String playGame(String[] moves, String inputMode) {
-		System.out.println("\nInput array: " + Arrays.toString(moves));
+		//System.out.println("\nInput array: " + Arrays.toString(moves));
 		
 		//determines how input will be gathered
 		boolean consoleInput;
-		if(inputMode.equals("T")) {testInput = true; }
+		if(inputMode.equals("T")) { testInput = true; }
 		if(inputMode.equals("C")) { consoleInput = true; }
 		else { 						consoleInput = false; }
 		
