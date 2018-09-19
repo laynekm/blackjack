@@ -12,6 +12,7 @@ public class GameController {
 	private Player player;
 	private Dealer dealer;
 	private boolean testInput;
+	private boolean guiInput;
 	
 	public GameController() {
 		 player = new Player();
@@ -25,10 +26,11 @@ public class GameController {
 		//System.out.println("\nInput array: " + Arrays.toString(moves));
 		
 		//determines how input will be gathered
-		boolean consoleInput;
+		boolean consoleInput = false;
 		if(inputMode.equals("T")) { testInput = true; }
-		if(inputMode.equals("C")) { consoleInput = true; }
-		else { 						consoleInput = false; }
+		if(inputMode.equals("G")) { guiInput = true;  consoleInput = true;}
+		if(inputMode.equals("C")) { guiInput = false; consoleInput = true; }
+		if(inputMode.equals("F")) { guiInput = true; consoleInput = false; }
 		
 		//variables used, x tracks pos in input array
 		String playerMove = "";
@@ -329,34 +331,46 @@ public class GameController {
 	
 	public String promptMove() {
 		String input = "";
-		/*
-		while(!isValidMove(input)) {
-			System.out.print("Hit (H) or Stand (S): ");
-			input = scanner.nextLine();
-		}*/
-		input = GUI.promptMoveButton();
+		if(guiInput) {
+			input = GUI.promptMoveButton();
+		}
+		else {
+			while(!isValidMove(input)) {
+				System.out.print("Hit (H) or Stand (S): ");
+				input = scanner.nextLine();
+			}
+		}
 		return input;
 	}
 	
 	public String promptMoveWithSplit() {
 		String input = "";
-		/*
-		while(!isValidMoveWithSplit(input)) {
-			System.out.print("Hit (H), Stand (S), or Split (D): ");
-			input = scanner.nextLine();
-		}*/
-		input = GUI.promptMoveButtonWithSplit();
+		if(guiInput) {
+			input = GUI.promptMoveButtonWithSplit();
+		}
+		else {
+			while(!isValidMoveWithSplit(input)) {
+				System.out.print("Hit (H), Stand (S), or Split (D): ");
+				input = scanner.nextLine();
+			}
+		}
 		return input;
 	}
 	
 	public String promptPlayAgain() {
 		String input = "";
-		/*
-		while(!isValidPlayAgain(input)) {
-			System.out.print("Play again (Y/N): ");
-			input = scanner.nextLine();
-		}*/
-		input = GUI.promptPlayAgain();
+		if(guiInput) {
+			input = GUI.promptPlayAgain();
+		}
+		else {
+			while(!isValidPlayAgain(input)) {
+				System.out.print("Play again (Y/N): ");
+				input = scanner.nextLine();
+				if(input.equals("Y")){
+					System.out.print("Note: GUI restarted, if want to play with console input again, must select 'Console' button on GUI.");
+				}
+			}
+		}
 		return input;
 	}
 	

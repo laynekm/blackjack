@@ -34,6 +34,7 @@ public class GUI extends Application {
 	private static Label sublabel;
 	private static Label exampleLabel;
 	private static TextField fileTxt;
+	private static Button guiBtn;
 	private static Button fileBtn;
 	private static Button hitBtn;
 	private static Button standBtn;
@@ -87,22 +88,24 @@ public class GUI extends Application {
 		label = new Label("Select console or file input:");
 		label.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
 		label.relocate(20, 20);
-		sublabel = new Label("*Not really console input since there's a GUI now, but you know what I mean.");
-		sublabel.setFont(Font.font("Serif", FontWeight.NORMAL, 14));
-		sublabel.relocate(20, 50);
+		
+		guiBtn = new Button("GUI");
+		guiBtn.setMinWidth(100);
+		guiBtn.relocate(20, 60);
 		
 		consoleBtn = new Button("Console");
 		consoleBtn.setMinWidth(100);
-		consoleBtn.relocate(20, 80);
+		consoleBtn.relocate(20, 90);
 		
 		fileBtn = new Button("File");
 		fileBtn.setMinWidth(100);
-		fileBtn.relocate(20,  110);
+		fileBtn.relocate(20,  120);
+		
 		fileTxt = new TextField();
-		fileTxt.relocate(140,  110);
+		fileTxt.relocate(140,  120);
 		exampleLabel = new Label("eg. playerWins.txt, playerSplits.txt, dealerSplits.txt, etc.");
 		exampleLabel.setFont(Font.font("Serif", FontWeight.NORMAL, 14));
-		exampleLabel.relocate(300, 110);
+		exampleLabel.relocate(300, 120);
 		errorLabel = new Label();
 		errorLabel.relocate(20, 140);
 		errorLabel.setTextFill(Color.RED);
@@ -141,7 +144,7 @@ public class GUI extends Application {
 		winnerLabel.setFont(Font.font("Serif", FontWeight.NORMAL, 50));
 		
 		//add UI elements to game screen
-		container.getChildren().addAll(label, sublabel, consoleBtn, fileTxt, fileBtn, exampleLabel, errorLabel);
+		container.getChildren().addAll(label, guiBtn, consoleBtn, fileTxt, fileBtn, exampleLabel, errorLabel);
 		canvas.setContent(container);
 
 		//event handlers for console and file input buttons
@@ -195,6 +198,33 @@ public class GUI extends Application {
 				String winner = game.playGame(deck.toArray(), "C");
 				winnerLabel.setText(winner);
 				winnerLabel.relocate(10, playerHandy - 125);
+				System.out.println("\n" + winner + "\n");
+				
+				String playAgain = game.promptPlayAgain();
+				if(playAgain.equals("Y")) {
+					game.endGame();
+					container.getChildren().clear();
+					canvas.setContent(container);
+					initUI(canvas);
+				}
+				else {
+					System.exit(0);
+				}
+			}
+		});
+
+		//event handler for gui input button; creates and shuffles deck then runs game
+		guiBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				Deck deck = new Deck();
+				deck.shuffle();
+				
+				clearMenu();
+				setUpButtonEventHandlers();
+				String winner = game.playGame(deck.toArray(), "G");
+				winnerLabel.setText(winner);
+				winnerLabel.relocate(10, playerHandy - 125);
 				if(winner.equals("Player wins!")){ winnerLabel.setTextFill(Color.GREEN);}
 				else {winnerLabel.setTextFill(Color.RED);}
 				container.getChildren().addAll(winnerLabel);
@@ -213,13 +243,12 @@ public class GUI extends Application {
 			}
 		});
 		
-		
 	}
 	
 	//makes elements in main menu invisible
 	public void clearMenu() {
 		label.setVisible(false);
-		sublabel.setVisible(false);
+		guiBtn.setVisible(false);
 		fileTxt.setVisible(false);
 		fileBtn.setVisible(false);
 		consoleBtn.setVisible(false);	
